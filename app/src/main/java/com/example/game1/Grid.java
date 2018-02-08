@@ -25,9 +25,9 @@ public class Grid {
     public Grid(Context context, int screenX, int screenY) {
 
         //setting box dimensions and space
-        width = 20;
-        height = 20;
-        space = width / 2;
+        width = 300;
+        height = 300;
+        space = width / 4;
 
         //setting grid dimensions
         grid_width = 3*width + 4*space;
@@ -35,13 +35,13 @@ public class Grid {
 
         //setting corner point of box1
         leftX = (screenX - grid_width) / 2;
-        topY = (screenY * 1 / 4);
+        topY = (screenY -grid_height) / 2;
 
         //initializing boxes and fixing their positions in the grid
         boxes = new Box[3][3];
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
-                boxes[i][j] = new Box(context, leftX + i * (width + space), topY + j * (height + space), width, height);
+                boxes[i][j] = new Box(context, leftX + space + i * (width + space), topY + space + j * (height + space), width, height);
             }
         }
 
