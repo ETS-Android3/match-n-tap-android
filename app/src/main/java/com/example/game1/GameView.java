@@ -45,8 +45,17 @@ public class GameView extends SurfaceView implements Runnable{
             canvas.drawColor(Color.WHITE);
 
             //draw grid outer box
-            //canvas.drawRect();
+            Paint paint = new Paint();
+            paint.setStrokeWidth(10.0f);
+            canvas.drawRect(grid.getLeftX(), grid.getTopY(), grid.getGrid_width()+grid.getLeftX(), grid.getGrid_height()+grid.getTopY(), paint);
 
+            for(int i=0; i<3; i++){
+                for(int j=0; j<3; j++){
+                    Box box = grid.getBox(i,j);
+                    paint.setColor(box.getColor());
+                    canvas.drawRect(box.getX(), box.getY(), box.getWidth()+box.getX(), box.getHeight()+box.getY(), paint);
+                }
+            }
 
             surfaceHolder.unlockCanvasAndPost(canvas);
         }
