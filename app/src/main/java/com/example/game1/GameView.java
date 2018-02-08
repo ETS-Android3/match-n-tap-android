@@ -1,6 +1,10 @@
 package com.example.game1;
 
 import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 /**
@@ -12,8 +16,13 @@ public class GameView extends SurfaceView implements Runnable{
     private boolean isPlaying = true;
     private Thread gameThread = null;
 
-    public GameView(Context context) {
+    private Grid grid;
+    private SurfaceHolder surfaceHolder = getHolder();
+
+    public GameView(Context context, int screenX, int screenY) {
+
         super(context);
+        grid = new Grid(context, screenX, screenY);
     }
 
     @Override
@@ -26,15 +35,30 @@ public class GameView extends SurfaceView implements Runnable{
     }
 
     private void update() {
-
+        grid.update();
     }
 
     private void draw() {
+        if(surfaceHolder.getSurface().isValid()){
+            Canvas canvas = surfaceHolder.lockCanvas();
 
+            canvas.drawColor(Color.WHITE);
+
+            //draw grid outer box
+            //canvas.drawRect();
+
+
+            surfaceHolder.unlockCanvasAndPost(canvas);
+        }
     }
 
     private void control() {
-
+        try{
+            gameThread.sleep(17);
+        }
+        catch(InterruptedException e){
+            e.printStackTrace();
+        }
     }
 
     public void pause() {

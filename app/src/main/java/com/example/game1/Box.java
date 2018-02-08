@@ -48,8 +48,4 @@ public class Box {
     public void update(){
         // change color after some time interval
     }
-
-    public void draw(){
-        // draw a square at x,y
-    }
 }

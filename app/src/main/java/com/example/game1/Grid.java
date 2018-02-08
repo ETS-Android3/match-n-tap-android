@@ -17,6 +17,7 @@ public class Grid {
         width = 20;
         height = 20;
         space = width / 2;
+
         int leftX = (screenX - (3 * width + 2 * space)) / 2;
         int topY = (screenY * 3 / 4);
 
