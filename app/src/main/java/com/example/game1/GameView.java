@@ -13,6 +13,8 @@ import android.view.SurfaceView;
 
 public class GameView extends SurfaceView implements Runnable{
 
+    int score;
+
     private boolean isPlaying = true;
     private Thread gameThread = null;
 
