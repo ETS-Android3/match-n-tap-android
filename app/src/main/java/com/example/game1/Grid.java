@@ -30,7 +30,7 @@ public class Grid {
     private int topBox_topY;
 
     private int score=0;
-    private int lives=0;
+    private int lives=10;
 
     public Grid(Context context, int screenX, int screenY) {
 
@@ -56,7 +56,7 @@ public class Grid {
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 Random rand = new Random();
-                int timeInterval = rand.nextInt(10)+10;
+                int timeInterval = rand.nextInt(50)+100;
                 boxes[i][j] = new Box(context, leftX + space + i * (width + space),
                         topY + space + j * (height + space), width, height,timeInterval);
             }

@@ -14,8 +14,8 @@ import android.view.SurfaceView;
 
 public class GameView extends SurfaceView implements Runnable{
 
-    int score;
-
+    private int score;
+    private int lives;
     private boolean isPlaying = true;
     private Thread gameThread = null;
 
@@ -39,6 +39,8 @@ public class GameView extends SurfaceView implements Runnable{
 
     private void update() {
         grid.update();
+        score = grid.getScore();
+        lives = grid.getLives();
     }
 
     private void draw() {
@@ -66,13 +68,23 @@ public class GameView extends SurfaceView implements Runnable{
             paint.setColor(topBox.getColor());
             canvas.drawRect(topBox.getX(),topBox.getY(),topBox.getWidth()+topBox.getX(),topBox.getHeight()+topBox.getY(),paint);
 
+            //adding score to the screen
+            paint.setColor(Color.BLACK);
+            paint.setTextSize(50);
+            canvas.drawText("Score:"+score,100,50,paint);
+
+            //adding lives to the screen
+            paint.setColor(Color.BLACK);
+            paint.setTextSize(50);
+            canvas.drawText("Lives:"+lives,grid.getGrid_width()-100 ,50,paint);
+
             surfaceHolder.unlockCanvasAndPost(canvas);
         }
     }
 
     private void control() {
         try{
-            gameThread.sleep(10);
+            gameThread.sleep(20);
         }
         catch(InterruptedException e){
             e.printStackTrace();
@@ -97,7 +109,7 @@ public class GameView extends SurfaceView implements Runnable{
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if(event.getActionMasked()==MotionEvent.ACTION_DOWN){
-            grid.checkColor(event.getX(), event.getX());
+            grid.checkColor(event.getX(), event.getY());
         }
         return super.onTouchEvent(event);
     }
