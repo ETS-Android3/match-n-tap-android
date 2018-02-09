@@ -15,14 +15,14 @@ public class GameView extends SurfaceView implements Runnable{
     public GameView(Context context) {
         super(context);
     }
-
+    {
+        update();
+        draw();
+        control();
+    }
     @Override
     public void run() {
-        while (isPlaying) {
-            update();
-            draw();
-            control();
-        }
+        while (isPlaying){}
     }
 
     private void update() {
