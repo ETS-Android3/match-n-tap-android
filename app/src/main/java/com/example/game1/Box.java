@@ -20,7 +20,8 @@ public class Box {
     private int num_colors;
     private int[] colors;
 
-    private int numItr;
+    private long startTime = System.currentTimeMillis();
+    private long currentTime;
 
     public Box(Context context, int x, int y, int width, int height, int timeInterval) {
         this.context = context;
@@ -29,7 +30,6 @@ public class Box {
         this.width = width;
         this.height = height;
         this.timeInterval = timeInterval;
-        numItr = timeInterval; //game should start with all boxes present on the screen
 
         num_colors = 6;
         colors = new int[num_colors];
@@ -66,12 +66,12 @@ public class Box {
     }
 
     public void update(){
-        numItr++;
-        if(numItr > timeInterval) {
+        currentTime = System.currentTimeMillis();
+        if(currentTime - startTime > timeInterval) {
             Random generator = new Random();
             int i = generator.nextInt(num_colors);
             color = colors[i];
-            numItr = 0;
+            startTime = currentTime;
         }
     }
 }

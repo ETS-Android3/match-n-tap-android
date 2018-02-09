@@ -56,13 +56,13 @@ public class Grid {
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 Random rand = new Random();
-                int timeInterval = rand.nextInt(50)+100;
+                int timeInterval = rand.nextInt(500)+1000;
                 boxes[i][j] = new Box(context, leftX + space + i * (width + space),
                         topY + space + j * (height + space), width, height,timeInterval);
             }
         }
 
-        topBox = new Box(context,topBox_leftX,topBox_topY,width,height,20);
+        topBox = new Box(context,topBox_leftX,topBox_topY,width,height,3000);
     }
 
     //method to update boxes(basically colors)
