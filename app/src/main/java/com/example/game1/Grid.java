@@ -29,6 +29,9 @@ public class Grid {
     private int topBox_leftX;
     private int topBox_topY;
 
+    private int score=0;
+    private int lives=0;
+
     public Grid(Context context, int screenX, int screenY) {
 
         //setting box dimensions and space
@@ -53,7 +56,7 @@ public class Grid {
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 Random rand = new Random();
-                int timeInterval = rand.nextInt(50)+50;
+                int timeInterval = rand.nextInt(10)+10;
                 boxes[i][j] = new Box(context, leftX + space + i * (width + space),
                         topY + space + j * (height + space), width, height,timeInterval);
             }
@@ -71,6 +74,30 @@ public class Grid {
         }
 
         topBox.update();
+    }
+
+    public void checkColor(float touchX, float touchY) {
+        //which box did user touch
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (boxes[i][j].getX() <= touchX && touchX <= boxes[i][j].getX() + width &&
+                        boxes[i][j].getY() <= touchY && touchY <= boxes[i][j].getY() + height) {
+                    if (boxes[i][j].getColor() == topBox.getColor()) {
+                        score++;
+                    } else {
+                        lives--;
+                    }
+                }
+            }
+        }
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public int getLives() {
+        return lives;
     }
 
     public int getGrid_width() {

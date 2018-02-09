@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
@@ -69,7 +70,7 @@ public class GameView extends SurfaceView implements Runnable{
 
     private void control() {
         try{
-            gameThread.sleep(30);
+            gameThread.sleep(10);
         }
         catch(InterruptedException e){
             e.printStackTrace();
@@ -89,5 +90,13 @@ public class GameView extends SurfaceView implements Runnable{
         isPlaying = true;
         gameThread = new Thread(this);
         gameThread.start();
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        if(event.getActionMasked()==MotionEvent.ACTION_DOWN){
+            grid.checkColor(event.getX(), event.getX());
+        }
+        return super.onTouchEvent(event);
     }
 }
