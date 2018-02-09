@@ -2,6 +2,8 @@ package com.example.game1;
 
 import android.content.Context;
 
+import java.util.Random;
+
 /**
  * Created by USER on 2/7/2018.
  */
@@ -50,11 +52,14 @@ public class Grid {
         boxes = new Box[3][3];
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
-                boxes[i][j] = new Box(context, leftX + space + i * (width + space), topY + space + j * (height + space), width, height);
+                Random rand = new Random();
+                int timeInterval = rand.nextInt(50)+50;
+                boxes[i][j] = new Box(context, leftX + space + i * (width + space),
+                        topY + space + j * (height + space), width, height,timeInterval);
             }
         }
 
-        topBox = new Box(context,topBox_leftX,topBox_topY,width,height);
+        topBox = new Box(context,topBox_leftX,topBox_topY,width,height,20);
     }
 
     //method to update boxes(basically colors)
