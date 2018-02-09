@@ -24,14 +24,14 @@ public class GameView extends SurfaceView implements Runnable{
         super(context);
         grid = new Grid(context, screenX, screenY);
     }
-    {
-        update();
-        draw();
-        control();
-    }
+
     @Override
     public void run() {
-        while (isPlaying){}
+        while (isPlaying) {
+            update();
+            draw();
+            control();
+        }
     }
 
     private void update() {
@@ -49,9 +49,7 @@ public class GameView extends SurfaceView implements Runnable{
             paint.setColor(Color.BLACK);
             canvas.drawRect(grid.getLeftX(), grid.getTopY(), grid.getGrid_width()+grid.getLeftX(), grid.getGrid_height()+grid.getTopY(), paint);
 
-           // paint.setColor(Color.WHITE);
-           // canvas.drawRect(grid.getLeftX()+grid.getSpace(), grid.getTopY()+grid.getSpace(), grid.getGrid_width()+grid.getLeftX()-grid.getSpace(), grid.getGrid_height()+grid.getTopY()-grid.getSpace(), paint);
-
+            //drawing 9 boxes in the grid
             for(int i=0; i<3; i++){
                 for(int j=0; j<3; j++){
                     Box box = grid.getBox(i,j);
@@ -59,6 +57,11 @@ public class GameView extends SurfaceView implements Runnable{
                     canvas.drawRect(box.getX(), box.getY(), box.getWidth()+box.getX(), box.getHeight()+box.getY(), paint);
                 }
             }
+
+            //drawing top Box
+            Box topBox = grid.getTopBox();
+            paint.setColor(topBox.getColor());
+            canvas.drawRect(topBox.getX(),topBox.getY(),topBox.getWidth()+topBox.getX(),topBox.getHeight()+topBox.getY(),paint);
 
             surfaceHolder.unlockCanvasAndPost(canvas);
         }

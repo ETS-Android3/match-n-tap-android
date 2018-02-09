@@ -8,6 +8,7 @@ import android.content.Context;
 
 public class Grid {
     private Box[][] boxes;
+    private Box topBox;
 
     //box width, height and space between boxes
     private int width;
@@ -18,24 +19,32 @@ public class Grid {
     private int grid_width;
     private int grid_height;
 
-    //point for top left corner of box1
+    //point for top left corner of grid
     private int leftX;
     private int topY;
+
+    //point for topBox corner
+    private int topBox_leftX;
+    private int topBox_topY;
 
     public Grid(Context context, int screenX, int screenY) {
 
         //setting box dimensions and space
-        width = 300;
-        height = 300;
+        width = (2*screenX)/9;
+        height = width;
         space = width / 4;
 
         //setting grid dimensions
         grid_width = 3*width + 4*space;
         grid_height = 3*height + 4*space;
 
-        //setting corner point of box1
-        leftX = (screenX - grid_width) / 2;
-        topY = (screenY -grid_height) / 2;
+        //setting corner point of grid
+        leftX = space;
+        topY = screenY - grid_height - 6*space;
+
+        //setting topBox corner
+        topBox_leftX = (screenX-width)/2;
+        topBox_topY = (topY - height)/2;
 
         //initializing boxes and fixing their positions in the grid
         boxes = new Box[3][3];
@@ -45,6 +54,7 @@ public class Grid {
             }
         }
 
+        topBox = new Box(context,topBox_leftX,topBox_topY,width,height);
     }
 
     //method to update boxes(basically colors)
@@ -54,6 +64,8 @@ public class Grid {
                 boxes[i][j].update();
             }
         }
+
+        topBox.update();
     }
 
     public int getGrid_width() {
@@ -76,6 +88,9 @@ public class Grid {
         return boxes[i][j];
     }
 
+    public Box getTopBox() {
+        return topBox;
+    }
     public int getWidth() {
         return width;
     }
