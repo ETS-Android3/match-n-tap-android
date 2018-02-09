@@ -15,7 +15,8 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="142dp"
         android:text="Play Now"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        android:onClick="startGame"/>
 
     <Button
         android:id="@+id/button4"

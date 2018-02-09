@@ -62,8 +62,4 @@ public class Box {
         int i = generator.nextInt(num_colors);
         color = colors[i];
     }
-
-    public void draw(){
-        // draw a square at x,y
-    }
 }
