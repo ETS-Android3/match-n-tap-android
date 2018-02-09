@@ -13,16 +13,23 @@ public class Box {
     private int x,y;
     private int width, height;
     private int color;
+    private int timeInterval;
+
     private Context context;
+
     private int num_colors;
     private int[] colors;
 
-    public Box(Context context, int x, int y, int width, int height) {
+    private int numItr=0;
+
+    public Box(Context context, int x, int y, int width, int height, int timeInterval) {
         this.context = context;
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
+        this.timeInterval = timeInterval;
+
         num_colors = 6;
         colors = new int[num_colors];
         colors[0] = Color.RED;
@@ -58,8 +65,11 @@ public class Box {
     }
 
     public void update(){
-        Random generator = new Random();
-        int i = generator.nextInt(num_colors);
-        color = colors[i];
+        numItr++;
+        if(numItr > timeInterval) {
+            Random generator = new Random();
+            int i = generator.nextInt(num_colors);
+            color = colors[i];
+        }
     }
 }
