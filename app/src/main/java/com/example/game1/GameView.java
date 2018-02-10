@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -17,6 +18,7 @@ import android.view.SurfaceView;
 
 public class GameView extends SurfaceView implements Runnable{
 
+    private static final String TAG = "GameView";
     private boolean isPlaying = true;
     private Thread gameThread = null;
 
@@ -71,6 +73,7 @@ public class GameView extends SurfaceView implements Runnable{
 
         if(lives<=0) {
             isPlaying = false;
+            printArray(highScore);
             //finding if score is greater than last highscore
             int finalI = 0;
             for (int i = 0; i < 4; i++) {
@@ -79,7 +82,7 @@ public class GameView extends SurfaceView implements Runnable{
                     break;
                 }
             }
-
+            Log.d(TAG, "final I = " + finalI);
             //storing the scores through shared Preferences
             SharedPreferences.Editor e = sharedPreferences.edit();
             e.putInt("score" + (finalI + 1), score);
@@ -90,6 +93,12 @@ public class GameView extends SurfaceView implements Runnable{
             e.apply();
         }
 
+    }
+
+    private void printArray(int[] highScore) {
+        for(int i=0; i<4; i++){
+            Log.d(TAG, highScore[i] + ", ");
+        }
     }
 
 
