@@ -1,6 +1,8 @@
 package com.example.game1;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -20,9 +22,13 @@ public class GameView extends SurfaceView implements Runnable{
     private Grid grid;
     private SurfaceHolder surfaceHolder = getHolder();
 
+    private Bitmap livesSymbol;
+
     public GameView(Context context, int screenX, int screenY) {
 
         super(context);
+        livesSymbol = BitmapFactory.decodeResource(context.getResources(), R.drawable.lives);
+        livesSymbol = Bitmap.createScaledBitmap(livesSymbol,100,100,false);
         grid = new Grid(context, screenX, screenY);
     }
 
@@ -33,46 +39,56 @@ public class GameView extends SurfaceView implements Runnable{
             draw();
             control();
         }
+
     }
 
     private void update() {
         grid.update();
+        if(grid.getLives()<=0) isPlaying = false;
     }
 
     private void draw() {
         if(surfaceHolder.getSurface().isValid()){
             Canvas canvas = surfaceHolder.lockCanvas();
+            Paint paint = new Paint();
 
             canvas.drawColor(Color.WHITE);
 
-            //draw grid outer box
-            Paint paint = new Paint();
-            paint.setColor(Color.BLACK);
-            canvas.drawRect(grid.getLeftX(), grid.getTopY(), grid.getGrid_width()+grid.getLeftX(), grid.getGrid_height()+grid.getTopY(), paint);
+            if(isPlaying) {
+                //draw grid outer box
+                paint.setColor(Color.BLACK);
+                canvas.drawRect(grid.getLeftX(), grid.getTopY(), grid.getGrid_width() + grid.getLeftX(), grid.getGrid_height() + grid.getTopY(), paint);
 
-            //drawing 9 boxes in the grid
-            for(int i=0; i<3; i++){
-                for(int j=0; j<3; j++){
-                    Box box = grid.getBox(i,j);
-                    paint.setColor(box.getColor());
-                    canvas.drawRect(box.getX(), box.getY(), box.getWidth()+box.getX(), box.getHeight()+box.getY(), paint);
+                //drawing 9 boxes in the grid
+                for (int i = 0; i < 3; i++) {
+                    for (int j = 0; j < 3; j++) {
+                        Box box = grid.getBox(i, j);
+                        paint.setColor(box.getColor());
+                        canvas.drawRect(box.getX(), box.getY(), box.getWidth() + box.getX(), box.getHeight() + box.getY(), paint);
+                    }
                 }
+
+                //drawing top Box
+                Box topBox = grid.getTopBox();
+                paint.setColor(topBox.getColor());
+                canvas.drawRect(topBox.getX(), topBox.getY(), topBox.getWidth() + topBox.getX(), topBox.getHeight() + topBox.getY(), paint);
+
+                //adding score to the screen
+                paint.setColor(Color.BLACK);
+                paint.setTextSize(100);
+                paint.setTextAlign(Paint.Align.CENTER);
+                canvas.drawText("" + grid.getScore(), canvas.getWidth()/2, 100, paint);
+
+                //adding lives to the screen
+                for(int i=1; i<=grid.getLives(); i++)
+                    canvas.drawBitmap(livesSymbol, canvas.getWidth()-i*100,50,paint);
             }
-
-            //drawing top Box
-            Box topBox = grid.getTopBox();
-            paint.setColor(topBox.getColor());
-            canvas.drawRect(topBox.getX(),topBox.getY(),topBox.getWidth()+topBox.getX(),topBox.getHeight()+topBox.getY(),paint);
-
-            //adding score to the screen
-            paint.setColor(Color.BLACK);
-            paint.setTextSize(50);
-            canvas.drawText("Score:"+grid.getScore(),100,50,paint);
-
-            //adding lives to the screen
-            paint.setColor(Color.BLACK);
-            paint.setTextSize(50);
-            canvas.drawText("Lives:"+grid.getLives(),grid.getGrid_width()-100 ,50,paint);
+            else{
+                paint.setColor(Color.BLACK);
+                paint.setTextSize(200);
+                paint.setTextAlign(Paint.Align.CENTER);
+                canvas.drawText("Gameover",canvas.getWidth()/2, canvas.getHeight()/2, paint);
+            }
 
             surfaceHolder.unlockCanvasAndPost(canvas);
         }
