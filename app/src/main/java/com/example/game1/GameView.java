@@ -1,6 +1,9 @@
 package com.example.game1;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -64,24 +67,29 @@ public class GameView extends SurfaceView implements Runnable{
         grid.update();
 
         score = grid.getScore();
-        //finding if score is greater than last highscore
-        int finalI = 0;
-        for(int i=0;i<4;i++){
-            if(highScore[i]>score){
-                finalI = i;
-                break;
+        lives = grid.getLives();
+
+        if(lives<=0) {
+            isPlaying = false;
+            //finding if score is greater than last highscore
+            int finalI = 0;
+            for (int i = 0; i < 4; i++) {
+                if (highScore[i] > score) {
+                    finalI = i;
+                    break;
+                }
             }
+
+            //storing the scores through shared Preferences
+            SharedPreferences.Editor e = sharedPreferences.edit();
+            e.putInt("score" + (finalI + 1), score);
+            for (int i = finalI + 1; i < 4; i++) {
+                int j = i + 1;
+                e.putInt("score" + j, highScore[i - 1]);
+            }
+            e.apply();
         }
 
-        //storing the scores through shared Preferences
-        SharedPreferences.Editor e = sharedPreferences.edit();
-        e.putInt("score"+(finalI+1),score);
-        for(int i=finalI+1;i<4;i++){
-            int j = i+1;
-            e.putInt("score"+j,highScore[i-1]);
-        }
-        e.apply();
-        if(grid.getLives()<=0) isPlaying = false;
     }
 
 
@@ -115,10 +123,10 @@ public class GameView extends SurfaceView implements Runnable{
                 paint.setColor(Color.BLACK);
                 paint.setTextSize(100);
                 paint.setTextAlign(Paint.Align.CENTER);
-                canvas.drawText("" + grid.getScore(), canvas.getWidth()/2, 100, paint);
+                canvas.drawText("" + score, canvas.getWidth()/2, 100, paint);
 
                 //adding lives to the screen
-                for(int i=1; i<=grid.getLives(); i++)
+                for(int i=1; i<=lives; i++)
                     canvas.drawBitmap(livesSymbol, canvas.getWidth()-i*100,50,paint);
             }
             else{
