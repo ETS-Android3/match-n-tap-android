@@ -20,7 +20,7 @@ public class Box {
     private int num_colors;
     private int[] colors;
 
-    private long startTime = System.currentTimeMillis();
+    private long startTime;
     private long currentTime;
 
     public Box(Context context, int x, int y, int width, int height, int timeInterval) {
@@ -30,6 +30,7 @@ public class Box {
         this.width = width;
         this.height = height;
         this.timeInterval = timeInterval;
+        startTime = System.currentTimeMillis()-timeInterval;
 
         num_colors = 6;
         colors = new int[num_colors];
