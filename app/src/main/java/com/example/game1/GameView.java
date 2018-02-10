@@ -2,6 +2,8 @@ package com.example.game1;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -30,9 +32,13 @@ public class GameView extends SurfaceView implements Runnable{
     private Grid grid;
     private SurfaceHolder surfaceHolder = getHolder();
 
+    private Bitmap livesSymbol;
+
     public GameView(Context context, int screenX, int screenY) {
 
         super(context);
+        livesSymbol = BitmapFactory.decodeResource(context.getResources(), R.drawable.lives);
+        livesSymbol = Bitmap.createScaledBitmap(livesSymbol,100,100,false);
 
         sharedPreferences = context.getSharedPreferences("SHAR_PREF_NAME",Context.MODE_PRIVATE);
 
@@ -54,6 +60,7 @@ public class GameView extends SurfaceView implements Runnable{
             draw();
             control();
         }
+
     }
 
     private void update() {
@@ -62,61 +69,72 @@ public class GameView extends SurfaceView implements Runnable{
         score = grid.getScore();
         lives = grid.getLives();
 
-        //finding if score is greater than last highscore
-        int finalI = 0;
-        for(int i=0;i<4;i++){
-            if(highScore[i]>score){
-                finalI = i;
-                break;
+        if(lives<=0) {
+            isPlaying = false;
+            //finding if score is greater than last highscore
+            int finalI = 0;
+            for (int i = 0; i < 4; i++) {
+                if (highScore[i] > score) {
+                    finalI = i;
+                    break;
+                }
             }
+
+            //storing the scores through shared Preferences
+            SharedPreferences.Editor e = sharedPreferences.edit();
+            e.putInt("score" + (finalI + 1), score);
+            for (int i = finalI + 1; i < 4; i++) {
+                int j = i + 1;
+                e.putInt("score" + j, highScore[i - 1]);
+            }
+            e.apply();
         }
 
-        //storing the scores through shared Preferences
-        SharedPreferences.Editor e = sharedPreferences.edit();
-        e.putInt("score"+(finalI+1),score);
-        for(int i=finalI+1;i<4;i++){
-            int j = i+1;
-            e.putInt("score"+j,highScore[i-1]);
-        }
-        e.apply();
     }
 
 
     private void draw() {
         if(surfaceHolder.getSurface().isValid()){
             Canvas canvas = surfaceHolder.lockCanvas();
+            Paint paint = new Paint();
 
             canvas.drawColor(Color.WHITE);
 
-            //draw grid outer box
-            Paint paint = new Paint();
-            paint.setColor(Color.BLACK);
-            canvas.drawRect(grid.getLeftX(), grid.getTopY(), grid.getGrid_width()+grid.getLeftX(), grid.getGrid_height()+grid.getTopY(), paint);
+            if(isPlaying) {
+                //draw grid outer box
+                paint.setColor(Color.BLACK);
+                canvas.drawRect(grid.getLeftX(), grid.getTopY(), grid.getGrid_width() + grid.getLeftX(), grid.getGrid_height() + grid.getTopY(), paint);
 
-            //drawing 9 boxes in the grid
-            for(int i=0; i<3; i++){
-                for(int j=0; j<3; j++){
-                    Box box = grid.getBox(i,j);
-                    paint.setColor(box.getColor());
-                    canvas.drawRect(box.getX(), box.getY(), box.getWidth()+box.getX(), box.getHeight()+box.getY(), paint);
+                //drawing 9 boxes in the grid
+                for (int i = 0; i < 3; i++) {
+                    for (int j = 0; j < 3; j++) {
+                        Box box = grid.getBox(i, j);
+                        paint.setColor(box.getColor());
+                        canvas.drawRect(box.getX(), box.getY(), box.getWidth() + box.getX(), box.getHeight() + box.getY(), paint);
+                    }
                 }
+
+                //drawing top Box
+                Box topBox = grid.getTopBox();
+                paint.setColor(topBox.getColor());
+                canvas.drawRect(topBox.getX(), topBox.getY(), topBox.getWidth() + topBox.getX(), topBox.getHeight() + topBox.getY(), paint);
+
+                //adding score to the screen
+                paint.setColor(Color.BLACK);
+                paint.setTextSize(100);
+                paint.setTextAlign(Paint.Align.CENTER);
+                canvas.drawText("" + score, canvas.getWidth()/2, 100, paint);
+
+                //adding lives to the screen
+                for(int i=1; i<=lives; i++)
+                    canvas.drawBitmap(livesSymbol, canvas.getWidth()-i*100,50,paint);
             }
-
-            //drawing top Box
-            Box topBox = grid.getTopBox();
-            paint.setColor(topBox.getColor());
-            canvas.drawRect(topBox.getX(),topBox.getY(),topBox.getWidth()+topBox.getX(),topBox.getHeight()+topBox.getY(),paint);
-
-            //adding score to the screen
-            paint.setColor(Color.BLACK);
-            paint.setTextSize(80);
-            paint.setFakeBoldText(true);
-            canvas.drawText(""+score,100,100,paint);
-
-            //adding lives to the screen
-            paint.setColor(Color.BLACK);
-            paint.setTextSize(50);
-            canvas.drawText("Lives:"+lives,grid.getGrid_width()-100 ,100,paint);
+            else{
+                paint.setColor(Color.BLACK);
+                paint.setTextSize(200);
+                paint.setTextAlign(Paint.Align.CENTER);
+                canvas.drawText("Gameover",canvas.getWidth()/2, canvas.getHeight()/2, paint);
+            }
 
             surfaceHolder.unlockCanvasAndPost(canvas);
         }
@@ -154,4 +172,3 @@ public class GameView extends SurfaceView implements Runnable{
         return super.onTouchEvent(event);
     }
 }
-

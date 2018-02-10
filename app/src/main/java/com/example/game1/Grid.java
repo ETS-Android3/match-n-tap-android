@@ -30,7 +30,7 @@ public class Grid {
     private int topBox_topY;
 
     private int score=0;
-    private int lives=10;
+    private int lives=5;
 
     public Grid(Context context, int screenX, int screenY) {
 
@@ -124,6 +124,7 @@ public class Grid {
     public Box getTopBox() {
         return topBox;
     }
+
     public int getWidth() {
         return width;
     }
