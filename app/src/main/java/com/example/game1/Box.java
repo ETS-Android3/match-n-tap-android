@@ -32,14 +32,14 @@ public class Box {
         this.timeInterval = timeInterval;
         startTime = System.currentTimeMillis()-timeInterval;
 
-        num_colors = 6;
+        num_colors = 4;
         colors = new int[num_colors];
         colors[0] = Color.RED;
         colors[1] = Color.BLUE;
         colors[2] = Color.GREEN;
         colors[3] = Color.YELLOW;
-        colors[4] = Color.CYAN;
-        colors[5] = Color.MAGENTA;
+        //colors[4] = Color.CYAN;
+        //colors[5] = Color.MAGENTA;
     }
 
     public void setColor(int color) {
@@ -69,10 +69,15 @@ public class Box {
     public void update(){
         currentTime = System.currentTimeMillis();
         if(currentTime - startTime > timeInterval) {
-            Random generator = new Random();
-            int i = generator.nextInt(num_colors);
-            color = colors[i];
+
+            color = getRandomColor();
             startTime = currentTime;
         }
+    }
+
+    public int getRandomColor(){
+        Random generator = new Random();
+        int i = generator.nextInt(num_colors);
+        return colors[i];
     }
 }
