@@ -74,7 +74,7 @@ public class GameView extends SurfaceView implements Runnable{
             //finding if score is greater than last highscore
             int finalI = 0;
             for (int i = 0; i < 4; i++) {
-                if (highScore[i] > score) {
+                if (highScore[i] < score) {
                     finalI = i;
                     break;
                 }
