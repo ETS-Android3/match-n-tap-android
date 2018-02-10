@@ -1,8 +1,6 @@
 package com.example.game1;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -19,6 +17,15 @@ public class GameView extends SurfaceView implements Runnable{
     private boolean isPlaying = true;
     private Thread gameThread = null;
 
+    private int score;
+    private int lives;
+
+    //the high Scores Holder
+    int highScore[] = new int[4];
+
+    //Shared Preferences to store the High Scores
+    SharedPreferences sharedPreferences;
+
     private Grid grid;
     private SurfaceHolder surfaceHolder = getHolder();
 
@@ -29,7 +36,18 @@ public class GameView extends SurfaceView implements Runnable{
         super(context);
         livesSymbol = BitmapFactory.decodeResource(context.getResources(), R.drawable.lives);
         livesSymbol = Bitmap.createScaledBitmap(livesSymbol,100,100,false);
+
+        sharedPreferences = context.getSharedPreferences("SHAR_PREF_NAME",Context.MODE_PRIVATE);
+
+        //initializing the array high scores with the previous values
+        highScore[0] = sharedPreferences.getInt("score1",0);
+        highScore[1] = sharedPreferences.getInt("score2",0);
+        highScore[2] = sharedPreferences.getInt("score3",0);
+        highScore[3] = sharedPreferences.getInt("score4",0);
+
         grid = new Grid(context, screenX, screenY);
+        score = grid.getScore();
+        lives = grid.getLives();
     }
 
     @Override
@@ -44,8 +62,28 @@ public class GameView extends SurfaceView implements Runnable{
 
     private void update() {
         grid.update();
+
+        score = grid.getScore();
+        //finding if score is greater than last highscore
+        int finalI = 0;
+        for(int i=0;i<4;i++){
+            if(highScore[i]>score){
+                finalI = i;
+                break;
+            }
+        }
+
+        //storing the scores through shared Preferences
+        SharedPreferences.Editor e = sharedPreferences.edit();
+        e.putInt("score"+(finalI+1),score);
+        for(int i=finalI+1;i<4;i++){
+            int j = i+1;
+            e.putInt("score"+j,highScore[i-1]);
+        }
+        e.apply();
         if(grid.getLives()<=0) isPlaying = false;
     }
+
 
     private void draw() {
         if(surfaceHolder.getSurface().isValid()){

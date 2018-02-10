@@ -67,6 +67,7 @@ public class Grid {
 
     //method to update boxes(basically colors)
     public void update() {
+        score++;
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 boxes[i][j].update();
@@ -83,7 +84,7 @@ public class Grid {
                 if (boxes[i][j].getX() <= touchX && touchX <= boxes[i][j].getX() + width &&
                         boxes[i][j].getY() <= touchY && touchY <= boxes[i][j].getY() + height) {
                     if (boxes[i][j].getColor() == topBox.getColor()) {
-                        score++;
+                        score+=20;
                     } else {
                         lives--;
                     }
