@@ -73,34 +73,27 @@ public class GameView extends SurfaceView implements Runnable{
 
         if(lives<=0) {
             isPlaying = false;
-            printArray(highScore);
             //finding if score is greater than last highscore
-            int finalI = 0;
+            int finalI = 4;
             for (int i = 0; i < 4; i++) {
                 if (highScore[i] < score) {
                     finalI = i;
                     break;
                 }
             }
-            Log.d(TAG, "final I = " + finalI);
-            //storing the scores through shared Preferences
-            SharedPreferences.Editor e = sharedPreferences.edit();
-            e.putInt("score" + (finalI + 1), score);
-            for (int i = finalI + 1; i < 4; i++) {
-                int j = i + 1;
-                e.putInt("score" + j, highScore[i - 1]);
+            if(finalI!=4) {
+                //storing the scores through shared Preferences
+                SharedPreferences.Editor e = sharedPreferences.edit();
+                e.putInt("score" + (finalI + 1), score);
+                for (int i = finalI + 1; i < 4; i++) {
+                    int j = i + 1;
+                    e.putInt("score" + j, highScore[i - 1]);
+                }
+                e.apply();
             }
-            e.apply();
         }
 
     }
-
-    private void printArray(int[] highScore) {
-        for(int i=0; i<4; i++){
-            Log.d(TAG, highScore[i] + ", ");
-        }
-    }
-
 
     private void draw() {
         if(surfaceHolder.getSurface().isValid()){
@@ -112,27 +105,38 @@ public class GameView extends SurfaceView implements Runnable{
             if(isPlaying) {
                 //draw grid outer box
                 paint.setColor(Color.BLACK);
-                canvas.drawRect(grid.getLeftX(), grid.getTopY(), grid.getGrid_width() + grid.getLeftX(), grid.getGrid_height() + grid.getTopY(), paint);
+                canvas.drawRect(grid.getLeftX(), grid.getTopY(), grid.getGrid_width() + grid.getLeftX(),
+                        grid.getGrid_height() + grid.getTopY(), paint);
 
                 //drawing 9 boxes in the grid
                 for (int i = 0; i < 3; i++) {
                     for (int j = 0; j < 3; j++) {
                         Box box = grid.getBox(i, j);
                         paint.setColor(box.getColor());
-                        canvas.drawRect(box.getX(), box.getY(), box.getWidth() + box.getX(), box.getHeight() + box.getY(), paint);
+                        canvas.drawRect(box.getX(), box.getY(), box.getWidth() + box.getX(),
+                                box.getHeight() + box.getY(), paint);
                     }
                 }
 
-                //drawing top Box
+
                 Box topBox = grid.getTopBox();
+
+
+                //drawing grid for topbox
+                paint.setColor(Color.BLACK);
+                canvas.drawRect(topBox.getX()-grid.getSpace(),topBox.getY()-grid.getSpace(),
+                        topBox.getX()+topBox.getWidth()+grid.getSpace(), topBox.getY()+topBox.getHeight()+grid.getSpace(), paint);
+
+                //drawing top Box
                 paint.setColor(topBox.getColor());
-                canvas.drawRect(topBox.getX(), topBox.getY(), topBox.getWidth() + topBox.getX(), topBox.getHeight() + topBox.getY(), paint);
+                canvas.drawRect(topBox.getX(), topBox.getY(), topBox.getWidth() + topBox.getX(),
+                        topBox.getHeight() + topBox.getY(), paint);
 
                 //adding score to the screen
                 paint.setColor(Color.BLACK);
                 paint.setTextSize(100);
                 paint.setTextAlign(Paint.Align.CENTER);
-                canvas.drawText("" + score, canvas.getWidth()/2, 100, paint);
+                canvas.drawText("" + score, 100, 150, paint);
 
                 //adding lives to the screen
                 for(int i=1; i<=lives; i++)
