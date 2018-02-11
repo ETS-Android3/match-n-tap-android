@@ -45,7 +45,7 @@ public class Grid {
 
         //setting corner point of grid
         leftX = space;
-        topY = screenY - grid_height - 6*space;
+        topY = screenY - grid_height - 4*space;
 
         //setting topBox corner
         topBox_leftX = (screenX-width)/2;
@@ -56,13 +56,13 @@ public class Grid {
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 Random rand = new Random();
-                int timeInterval = rand.nextInt(500)+1000;
+                int timeInterval = rand.nextInt(1000)+2000;
                 boxes[i][j] = new Box(context, leftX + space + i * (width + space),
                         topY + space + j * (height + space), width, height,timeInterval);
             }
         }
 
-        topBox = new Box(context,topBox_leftX,topBox_topY,width,height,3000);
+        topBox = new Box(context,topBox_leftX,topBox_topY,width,height,5000);
     }
 
     //method to update boxes(basically colors)
