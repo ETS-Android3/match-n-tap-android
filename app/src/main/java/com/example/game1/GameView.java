@@ -49,14 +49,17 @@ public class GameView extends SurfaceView implements Runnable{
     public GameView(Context context, int screenX, int screenY) {
 
         super(context);
+
+        grid = new Grid(context, screenX, screenY);
+
         livesSymbol = BitmapFactory.decodeResource(context.getResources(), R.drawable.lives);
         livesSymbol = Bitmap.createScaledBitmap(livesSymbol,100,100,false);
 
         wrongSymbol = BitmapFactory.decodeResource(context.getResources(), R.drawable.wrong);
-        wrongSymbol = Bitmap.createScaledBitmap(wrongSymbol,(2*screenX/9),(2*screenX/9),false);
+        wrongSymbol = Bitmap.createScaledBitmap(wrongSymbol,grid.getWidth(),grid.getHeight(),false);
 
         correctSymbol = BitmapFactory.decodeResource(context.getResources(), R.drawable.correct);
-        correctSymbol = Bitmap.createScaledBitmap(correctSymbol,(2*screenX/9),(2*screenX/9),false);
+        correctSymbol = Bitmap.createScaledBitmap(correctSymbol,grid.getWidth(),grid.getHeight(),false);
 
         soundPool = new SoundPool(10, AudioManager.STREAM_MUSIC, 0);
 
@@ -85,7 +88,6 @@ public class GameView extends SurfaceView implements Runnable{
         highScore[2] = sharedPreferences.getInt("score3",0);
         highScore[3] = sharedPreferences.getInt("score4",0);
 
-        grid = new Grid(context, screenX, screenY);
         score = grid.getScore();
         lives = grid.getLives();
     }

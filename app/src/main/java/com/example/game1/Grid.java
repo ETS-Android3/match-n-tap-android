@@ -35,9 +35,9 @@ public class Grid {
     public Grid(Context context, int screenX, int screenY) {
 
         //setting box dimensions and space
-        width = (2*screenX)/9;
+        width = (screenX)/4;
         height = width;
-        space = width / 4;
+        space = width / 6;
 
         //setting grid dimensions
         grid_width = 3*width + 4*space;
