@@ -17,11 +17,13 @@ public class Box {
 
     private Context context;
 
-    private int num_colors;
-    private int[] colors;
+    public static int num_colors=4;
+
 
     private long startTime;
     private long currentTime;
+
+    private int clicked = 0; //0: not clicked, -1: wrong click; 1: correct click
 
     public Box(Context context, int x, int y, int width, int height, int timeInterval) {
         this.context = context;
@@ -31,18 +33,17 @@ public class Box {
         this.height = height;
         this.timeInterval = timeInterval;
         startTime = System.currentTimeMillis()-timeInterval;
-
-        num_colors = 4;
-        colors = new int[num_colors];
-        colors[0] = Color.RED;
-        colors[1] = Color.BLUE;
-        colors[2] = Color.GREEN;
-        colors[3] = Color.YELLOW;
-        //colors[4] = Color.CYAN;
-        //colors[5] = Color.MAGENTA;
     }
 
-    public void setColor(int color) {
+    public int getClicked() {
+        return clicked;
+    }
+
+    public void setClicked(int clicked) {
+        this.clicked = clicked;
+    }
+
+    public void setColorIndex(int color) {
         this.color = color;
     }
 
@@ -62,7 +63,7 @@ public class Box {
         return height;
     }
 
-    public int getColor() {
+    public int getColorIndex() {
         return color;
     }
 
@@ -78,6 +79,6 @@ public class Box {
     public int getRandomColor(){
         Random generator = new Random();
         int i = generator.nextInt(num_colors);
-        return colors[i];
+        return i;
     }
 }

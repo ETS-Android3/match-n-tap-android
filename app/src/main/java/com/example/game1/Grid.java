@@ -82,10 +82,11 @@ public class Grid {
             for (int j = 0; j < 3; j++) {
                 if (boxes[i][j].getX() <= touchX && touchX <= boxes[i][j].getX() + width &&
                         boxes[i][j].getY() <= touchY && touchY <= boxes[i][j].getY() + height) {
-                    if (boxes[i][j].getColor() == topBox.getColor()) {
+                    if (boxes[i][j].getColorIndex() == topBox.getColorIndex()) {
                         score+=20;
-                        boxes[i][j].setColor(boxes[i][j].getRandomColor());
+                        boxes[i][j].setClicked(1);
                     } else {
+                        boxes[i][j].setClicked(-1);
                         lives--;
                     }
                 }

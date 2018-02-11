@@ -7,7 +7,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.util.Log;
+import android.media.MediaPlayer;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -34,13 +34,40 @@ public class GameView extends SurfaceView implements Runnable{
     private Grid grid;
     private SurfaceHolder surfaceHolder = getHolder();
 
-    private Bitmap livesSymbol;
+    private Bitmap livesSymbol, wrongSymbol, correctSymbol;
+
+    final MediaPlayer[] correctSounds;
+    final MediaPlayer errorSound;
+    private int[] colors;
+    int num_colors;
 
     public GameView(Context context, int screenX, int screenY) {
 
         super(context);
         livesSymbol = BitmapFactory.decodeResource(context.getResources(), R.drawable.lives);
         livesSymbol = Bitmap.createScaledBitmap(livesSymbol,100,100,false);
+
+        wrongSymbol = BitmapFactory.decodeResource(context.getResources(), R.drawable.wrong);
+        wrongSymbol = Bitmap.createScaledBitmap(wrongSymbol,(2*screenX/9),(2*screenX/9),false);
+
+        correctSymbol = BitmapFactory.decodeResource(context.getResources(), R.drawable.correct);
+        correctSymbol = Bitmap.createScaledBitmap(correctSymbol,(2*screenX/9),(2*screenX/9),false);
+
+        num_colors = Box.num_colors;
+        correctSounds = new MediaPlayer[num_colors];
+        correctSounds[0] = MediaPlayer.create(context, R.raw.dor);
+        correctSounds[1] = MediaPlayer.create(context, R.raw.mi);
+        correctSounds[2] = MediaPlayer.create(context, R.raw.so);
+        correctSounds[3] = MediaPlayer.create(context, R.raw.si);
+
+        errorSound = MediaPlayer.create(context, R.raw.error);
+
+
+        colors = new int[num_colors];
+        colors[0] = Color.RED;
+        colors[1] = Color.BLUE;
+        colors[2] = Color.GREEN;
+        colors[3] = Color.YELLOW;
 
         sharedPreferences = context.getSharedPreferences("SHAR_PREF_NAME",Context.MODE_PRIVATE);
 
@@ -112,9 +139,24 @@ public class GameView extends SurfaceView implements Runnable{
                 for (int i = 0; i < 3; i++) {
                     for (int j = 0; j < 3; j++) {
                         Box box = grid.getBox(i, j);
-                        paint.setColor(box.getColor());
+                        paint.setColor(colors[box.getColorIndex()]);
                         canvas.drawRect(box.getX(), box.getY(), box.getWidth() + box.getX(),
                                 box.getHeight() + box.getY(), paint);
+
+                        //draw wrong mark on wrong click
+                        if(box.getClicked()==-1){
+                            canvas.drawBitmap(wrongSymbol, box.getX(), box.getY(), paint);
+                            box.setClicked(0);
+                            errorSound.start();
+                        }
+
+                        //draw circle on correct click
+                        if(box.getClicked()==1){
+                            canvas.drawBitmap(correctSymbol, box.getX(), box.getY(), paint);
+                            box.setColorIndex(box.getRandomColor());
+                            box.setClicked(0);
+                            correctSounds[box.getColorIndex()].start();
+                        }
                     }
                 }
 
@@ -128,7 +170,7 @@ public class GameView extends SurfaceView implements Runnable{
                         topBox.getX()+topBox.getWidth()+grid.getSpace(), topBox.getY()+topBox.getHeight()+grid.getSpace(), paint);
 
                 //drawing top Box
-                paint.setColor(topBox.getColor());
+                paint.setColor(colors[topBox.getColorIndex()]);
                 canvas.drawRect(topBox.getX(), topBox.getY(), topBox.getWidth() + topBox.getX(),
                         topBox.getHeight() + topBox.getY(), paint);
 
