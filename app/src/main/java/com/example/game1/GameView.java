@@ -7,7 +7,10 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.media.AudioAttributes;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.media.SoundPool;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -36,8 +39,10 @@ public class GameView extends SurfaceView implements Runnable{
 
     private Bitmap livesSymbol, wrongSymbol, correctSymbol;
 
-    final MediaPlayer[] correctSounds;
-    final MediaPlayer errorSound;
+
+    private SoundPool soundPool;
+    final int[] correctSounds;
+    final int errorSound;
     private int[] colors;
     int num_colors;
 
@@ -53,14 +58,17 @@ public class GameView extends SurfaceView implements Runnable{
         correctSymbol = BitmapFactory.decodeResource(context.getResources(), R.drawable.correct);
         correctSymbol = Bitmap.createScaledBitmap(correctSymbol,(2*screenX/9),(2*screenX/9),false);
 
-        num_colors = Box.num_colors;
-        correctSounds = new MediaPlayer[num_colors];
-        correctSounds[0] = MediaPlayer.create(context, R.raw.dor);
-        correctSounds[1] = MediaPlayer.create(context, R.raw.mi);
-        correctSounds[2] = MediaPlayer.create(context, R.raw.so);
-        correctSounds[3] = MediaPlayer.create(context, R.raw.si);
+        soundPool = new SoundPool(10, AudioManager.STREAM_MUSIC, 0);
 
-        errorSound = MediaPlayer.create(context, R.raw.error);
+
+        num_colors = Box.num_colors;
+        correctSounds = new int[num_colors];
+        correctSounds[0] = soundPool.load(context, R.raw.dor,1);
+        correctSounds[1] = soundPool.load(context, R.raw.mi,1);
+        correctSounds[2] = soundPool.load(context, R.raw.so,1);
+        correctSounds[3] = soundPool.load(context, R.raw.fa,1);
+
+        errorSound = soundPool.load(context, R.raw.error,1);;
 
 
         colors = new int[num_colors];
@@ -145,17 +153,17 @@ public class GameView extends SurfaceView implements Runnable{
 
                         //draw wrong mark on wrong click
                         if(box.getClicked()==-1){
+                            soundPool.play(errorSound,1,1,1,0,1);
                             canvas.drawBitmap(wrongSymbol, box.getX(), box.getY(), paint);
                             box.setClicked(0);
-                            errorSound.start();
                         }
 
                         //draw circle on correct click
                         if(box.getClicked()==1){
+                            soundPool.play(correctSounds[box.getColorIndex()],1,1,1,0,1);
                             canvas.drawBitmap(correctSymbol, box.getX(), box.getY(), paint);
                             box.setColorIndex(box.getRandomColor());
                             box.setClicked(0);
-                            correctSounds[box.getColorIndex()].start();
                         }
                     }
                 }
