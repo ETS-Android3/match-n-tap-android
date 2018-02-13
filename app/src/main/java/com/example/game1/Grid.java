@@ -30,7 +30,6 @@ public class Grid {
     private int topBox_topY;
 
     private int score=0;
-    private int lives=5;
 
     public Grid(Context context, int screenX, int screenY) {
 
@@ -86,8 +85,8 @@ public class Grid {
                         score+=20;
                         boxes[i][j].setClicked(1);
                     } else {
+                        score-=10;
                         boxes[i][j].setClicked(-1);
-                        lives--;
                     }
                 }
             }
@@ -96,10 +95,6 @@ public class Grid {
 
     public int getScore() {
         return score;
-    }
-
-    public int getLives() {
-        return lives;
     }
 
     public int getGrid_width() {
