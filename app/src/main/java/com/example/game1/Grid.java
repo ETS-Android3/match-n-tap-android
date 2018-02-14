@@ -55,7 +55,7 @@ public class Grid {
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 Random rand = new Random();
-                int timeInterval = rand.nextInt(1000)+2000;
+                int timeInterval = rand.nextInt(1000)+3000;
                 boxes[i][j] = new Box(context, leftX + space + i * (width + space),
                         topY + space + j * (height + space), width, height,timeInterval);
             }
@@ -73,6 +73,24 @@ public class Grid {
         }
 
         topBox.update();
+
+        if(IsColorPresent()==false){
+            Random rand = new Random();
+            boxes[rand.nextInt(3)][rand.nextInt(3)].setColorIndex(topBox.getColorIndex());
+            //boxes[rand.nextInt(3)][rand.nextInt(3)].setColorIndex(topBox.getColorIndex());
+        }
+    }
+
+    //checks if any of boxes has color same as topbox
+    public boolean IsColorPresent(){
+        for(int i=0;i<3;i++){
+            for(int j=0;j<3;j++){
+                if(boxes[i][j].getColorIndex()==topBox.getColorIndex()){
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     public void checkColor(float touchX, float touchY) {
