@@ -78,7 +78,10 @@ public class Box {
 
     public int getRandomColor(){
         Random generator = new Random();
-        int i = generator.nextInt(num_colors);
+        int i;
+        do{
+            i = generator.nextInt(num_colors);
+        }while(i==color);
         return i;
     }
 }

@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -26,7 +27,13 @@ public class GameView extends SurfaceView implements Runnable{
     private Thread gameThread = null;
 
     private int score;
-    private int lives;
+    private int score1;
+    private int score2;
+    private int score3;
+    private int num_stars;
+    private Rect r;
+    private long startTime;
+    private long currentTime;
 
     //the high Scores Holder
     int highScore[] = new int[4];
@@ -46,14 +53,17 @@ public class GameView extends SurfaceView implements Runnable{
     private int[] colors;
     int num_colors;
 
+    int screenX;
+    int screenY;
+
     public GameView(Context context, int screenX, int screenY) {
 
         super(context);
 
-        grid = new Grid(context, screenX, screenY);
+        this.screenX = screenX;
+        this.screenY = screenY;
 
-        livesSymbol = BitmapFactory.decodeResource(context.getResources(), R.drawable.lives);
-        livesSymbol = Bitmap.createScaledBitmap(livesSymbol,100,100,false);
+        grid = new Grid(context, screenX, screenY);
 
         wrongSymbol = BitmapFactory.decodeResource(context.getResources(), R.drawable.wrong);
         wrongSymbol = Bitmap.createScaledBitmap(wrongSymbol,grid.getWidth(),grid.getHeight(),false);
@@ -73,7 +83,6 @@ public class GameView extends SurfaceView implements Runnable{
 
         errorSound = soundPool.load(context, R.raw.error,1);;
 
-
         colors = new int[num_colors];
         colors[0] = Color.RED;
         colors[1] = Color.BLUE;
@@ -89,7 +98,17 @@ public class GameView extends SurfaceView implements Runnable{
         highScore[3] = sharedPreferences.getInt("score4",0);
 
         score = grid.getScore();
-        lives = grid.getLives();
+
+        score1 = 800;
+        score2 = 1000;
+        score3 = 1200;
+
+        r = new Rect(screenX/2, grid.getSpace(),screenX -grid.getSpace(),2*grid.getSpace());
+
+        startTime = System.currentTimeMillis();
+        currentTime = System.currentTimeMillis();
+
+        num_stars = 0;
     }
 
     @Override
@@ -103,12 +122,20 @@ public class GameView extends SurfaceView implements Runnable{
     }
 
     private void update() {
+        currentTime = System.currentTimeMillis();
         grid.update();
 
         score = grid.getScore();
-        lives = grid.getLives();
 
-        if(lives<=0) {
+        if(score>=score3){
+            num_stars = 3;
+        }else if(score>=score2){
+            num_stars=2;
+        }else if(score>=score1){
+            num_stars=1;
+        }
+
+        if(currentTime-startTime>60000) {
             isPlaying = false;
             //finding if score is greater than last highscore
             int finalI = 4;
@@ -170,9 +197,7 @@ public class GameView extends SurfaceView implements Runnable{
                     }
                 }
 
-
                 Box topBox = grid.getTopBox();
-
 
                 //drawing grid for topbox
                 paint.setColor(Color.BLACK);
@@ -190,11 +215,35 @@ public class GameView extends SurfaceView implements Runnable{
                 paint.setTextAlign(Paint.Align.CENTER);
                 canvas.drawText("" + score, 100, 150, paint);
 
-                //adding lives to the screen
-                for(int i=1; i<=lives; i++)
-                    canvas.drawBitmap(livesSymbol, canvas.getWidth()-i*100,50,paint);
+                //adding timebar to the screen
+
+                // border
+                r.set(screenX/2, grid.getSpace(),screenX -grid.getSpace(),2*grid.getSpace());
+                paint.setStyle(Paint.Style.STROKE);
+                paint.setColor(getResources().getColor(R.color.gray));
+                canvas.drawRect(r, paint);
+
+                // fill
+                int width = screenX/2 + ((int)(currentTime-startTime)*(screenX/2 - grid.getSpace())/60000);
+                r.set(screenX/2, grid.getSpace(),width,2*grid.getSpace());
+                paint.setStyle(Paint.Style.FILL);
+                paint.setColor(Color.GREEN);
+                canvas.drawRect(r, paint);
+
+
             }
             else{
+
+                paint.setColor(Color.BLACK);
+                paint.setTextSize(100);
+                paint.setTextAlign(Paint.Align.CENTER);
+                canvas.drawText("Score" + score, screenX/2, 150, paint);
+
+                paint.setColor(Color.BLACK);
+                paint.setTextSize(100);
+                paint.setTextAlign(Paint.Align.CENTER);
+                canvas.drawText("Stars" + num_stars, screenX/2, 300, paint);
+
                 paint.setColor(Color.BLACK);
                 paint.setTextSize(200);
                 paint.setTextAlign(Paint.Align.CENTER);
