@@ -34,9 +34,9 @@ public class Grid {
     public Grid(Context context, int screenX, int screenY) {
 
         //setting box dimensions and space
-        width = (screenX)/4;
+        width = 4*(screenX)/15;
         height = width;
-        space = width / 6;
+        space = width / 8;
 
         //setting grid dimensions
         grid_width = 3*width + 4*space;
@@ -48,7 +48,7 @@ public class Grid {
 
         //setting topBox corner
         topBox_leftX = (screenX-width)/2;
-        topBox_topY = (topY - height)/2;
+        topBox_topY = topY - (height + 2*space); //leaving a gap between grid and top box
 
         //initializing boxes and fixing their positions in the grid
         boxes = new Box[3][3];
@@ -56,12 +56,12 @@ public class Grid {
             for (int j = 0; j < 3; j++) {
                 Random rand = new Random();
                 int timeInterval = rand.nextInt(1000)+3000;
-                boxes[i][j] = new Box(context, leftX + space + i * (width + space),
+                boxes[i][j] = new Box(leftX + space + i * (width + space),
                         topY + space + j * (height + space), width, height,timeInterval);
             }
         }
 
-        topBox = new Box(context,topBox_leftX,topBox_topY,width,height,5000);
+        topBox = new Box(topBox_leftX,topBox_topY,width,height,6000);
     }
 
     //method to update boxes(basically colors)
@@ -77,7 +77,6 @@ public class Grid {
         if(IsColorPresent()==false){
             Random rand = new Random();
             boxes[rand.nextInt(3)][rand.nextInt(3)].setColorIndex(topBox.getColorIndex());
-            //boxes[rand.nextInt(3)][rand.nextInt(3)].setColorIndex(topBox.getColorIndex());
         }
     }
 

@@ -1,7 +1,6 @@
 package com.example.game1;
 
 import android.content.Context;
-import android.graphics.Color;
 
 import java.util.Random;
 
@@ -12,21 +11,17 @@ import java.util.Random;
 public class Box {
     private int x,y;
     private int width, height;
-    private int color;
-    private int timeInterval;
-
-    private Context context;
+    private int colorIndex;
+    private int timeInterval; //to change the color
 
     public static int num_colors=4;
-
 
     private long startTime;
     private long currentTime;
 
     private int clicked = 0; //0: not clicked, -1: wrong click; 1: correct click
 
-    public Box(Context context, int x, int y, int width, int height, int timeInterval) {
-        this.context = context;
+    public Box(int x, int y, int width, int height, int timeInterval) {
         this.x = x;
         this.y = y;
         this.width = width;
@@ -44,7 +39,7 @@ public class Box {
     }
 
     public void setColorIndex(int color) {
-        this.color = color;
+        this.colorIndex = color;
     }
 
     public int getX() {
@@ -64,24 +59,27 @@ public class Box {
     }
 
     public int getColorIndex() {
-        return color;
+        return colorIndex;
     }
 
     public void update(){
         currentTime = System.currentTimeMillis();
         if(currentTime - startTime > timeInterval) {
 
-            color = getRandomColor();
-            startTime = currentTime;
+            colorIndex = getRandomColor();
         }
     }
 
     public int getRandomColor(){
         Random generator = new Random();
         int i;
+        // generate color not equal to previous color
         do{
             i = generator.nextInt(num_colors);
-        }while(i==color);
+        }while(i== colorIndex);
+
+        startTime = currentTime;
+
         return i;
     }
 }
