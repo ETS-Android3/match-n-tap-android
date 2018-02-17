@@ -1,6 +1,8 @@
 package com.example.game1;
 
 import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Paint;
 
 import java.util.Random;
 
@@ -56,12 +58,12 @@ public class Grid {
             for (int j = 0; j < 3; j++) {
                 Random rand = new Random();
                 int timeInterval = rand.nextInt(1000)+3000;
-                boxes[i][j] = new Box(leftX + space + i * (width + space),
-                        topY + space + j * (height + space), width, height,timeInterval);
+                boxes[i][j] = new Box(context, leftX + space + i * (width + space),
+                        topY + space + j * (height + space), width, height, space, timeInterval);
             }
         }
 
-        topBox = new Box(topBox_leftX,topBox_topY,width,height,6000);
+        topBox = new Box(context, topBox_leftX,topBox_topY,width,height,space,6000);
     }
 
     //method to update boxes(basically colors)
@@ -76,12 +78,24 @@ public class Grid {
 
         if(IsColorPresent()==false){
             Random rand = new Random();
-            boxes[rand.nextInt(3)][rand.nextInt(3)].setColorIndex(topBox.getColorIndex());
+            boxes[rand.nextInt(3)][rand.nextInt(3)].changeColor(topBox.getColorIndex());
         }
     }
 
+    public void draw(Canvas canvas, Paint paint){
+        //drawing 9 boxes in the grid
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                Box box = boxes[i][j];
+                box.draw(canvas, paint);
+            }
+        }
+        //draw top box
+        topBox.draw(canvas, paint);
+    }
+
     //checks if any of boxes has color same as topbox
-    public boolean IsColorPresent(){
+    private boolean IsColorPresent(){
         for(int i=0;i<3;i++){
             for(int j=0;j<3;j++){
                 if(boxes[i][j].getColorIndex()==topBox.getColorIndex()){
@@ -92,50 +106,28 @@ public class Grid {
         return false;
     }
 
-    public void checkColor(float touchX, float touchY) {
+    public int checkColor(float touchX, float touchY) {
         //which box did user touch
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
-                if (boxes[i][j].getX() <= touchX && touchX <= boxes[i][j].getX() + width &&
-                        boxes[i][j].getY() <= touchY && touchY <= boxes[i][j].getY() + height) {
+                if (boxes[i][j].isTouched(touchX, touchY)) {
                     if (boxes[i][j].getColorIndex() == topBox.getColorIndex()) {
                         score+=20;
                         boxes[i][j].setClicked(1);
+                        return topBox.getColorIndex();
                     } else {
                         score-=10;
                         boxes[i][j].setClicked(-1);
+                        return Box.num_colors;
                     }
                 }
             }
         }
+        return -1;
     }
 
     public int getScore() {
         return score;
-    }
-
-    public int getGrid_width() {
-        return grid_width;
-    }
-
-    public int getGrid_height() {
-        return grid_height;
-    }
-
-    public int getLeftX() {
-        return leftX;
-    }
-
-    public int getTopY() {
-        return topY;
-    }
-
-    public Box getBox(int i, int j) {
-        return boxes[i][j];
-    }
-
-    public Box getTopBox() {
-        return topBox;
     }
 
     public int getWidth() {

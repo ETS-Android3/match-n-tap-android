@@ -27,13 +27,6 @@ public class GameView extends SurfaceView implements Runnable{
     private final int score1;
     private final int score2;
     private final int score3;
-
-    private final long timeLimit;
-
-    private final int[] colors;
-    private final int num_colors;
-
-    private final int padding; //for display spaces
     // ---
 
     private boolean isPlaying = true;
@@ -42,11 +35,6 @@ public class GameView extends SurfaceView implements Runnable{
     private int userScore;
     private int num_stars;
 
-    private Rect timeBarRect; //for time bar
-
-    private long startTime;
-    private long currentTime;
-
     //the high Scores Holder
     private int highScore[] = new int[4];
 
@@ -54,15 +42,12 @@ public class GameView extends SurfaceView implements Runnable{
     SharedPreferences sharedPreferences;
 
     private Grid grid;
+    private SoundManager soundManager;
+    private Timebar timebar;
 
     private SurfaceHolder surfaceHolder = getHolder();
 
-    private Bitmap wrongSymbol, correctSymbol;
-
-
-    private SoundPool soundPool;
-    final int[] correctSounds;
-    final int errorSound;
+    public static Bitmap wrongSymbol, correctSymbol;
 
 
     int screenX;
@@ -77,26 +62,8 @@ public class GameView extends SurfaceView implements Runnable{
         this.screenY = screenY;
 
         grid = new Grid(context, screenX, screenY);
-
-
-        // constants
-        num_colors = Box.num_colors;
-
-        soundPool = new SoundPool(10, AudioManager.STREAM_MUSIC, 0);
-        correctSounds = new int[num_colors];
-        correctSounds[0] = soundPool.load(context, R.raw.dor,1);
-        correctSounds[1] = soundPool.load(context, R.raw.mi,1);
-        correctSounds[2] = soundPool.load(context, R.raw.so,1);
-        correctSounds[3] = soundPool.load(context, R.raw.fa,1);
-
-        errorSound = soundPool.load(context, R.raw.error,1);
-
-        colors = new int[num_colors];
-        colors[0] = Color.RED;
-        colors[1] = Color.BLUE;
-        colors[2] = Color.GREEN;
-        colors[3] = Color.YELLOW;
-        padding = grid.getSpace();
+        soundManager = new SoundManager(context);
+        timebar = new Timebar(context, grid.getSpace(), 60000, screenX);
 
         wrongSymbol = BitmapFactory.decodeResource(context.getResources(), R.drawable.wrong);
         wrongSymbol = Bitmap.createScaledBitmap(wrongSymbol,grid.getWidth(),grid.getHeight(),false);
@@ -104,11 +71,10 @@ public class GameView extends SurfaceView implements Runnable{
         correctSymbol = BitmapFactory.decodeResource(context.getResources(), R.drawable.correct);
         correctSymbol = Bitmap.createScaledBitmap(correctSymbol,grid.getWidth(),grid.getHeight(),false);
 
+
         score1 = 800;
         score2 = 1000;
         score3 = 1200;
-
-        timeLimit = 60000; // 1 min
 
         //--
 
@@ -121,11 +87,6 @@ public class GameView extends SurfaceView implements Runnable{
         highScore[3] = sharedPreferences.getInt("score4",0);
 
         userScore = grid.getScore();
-
-        timeBarRect = new Rect(padding, padding,screenX -padding,2*padding);
-
-        startTime = System.currentTimeMillis();
-        currentTime = System.currentTimeMillis();
 
         num_stars = 0;
     }
@@ -141,13 +102,12 @@ public class GameView extends SurfaceView implements Runnable{
     }
 
     private void update() {
-        currentTime = System.currentTimeMillis();
-
         grid.update();
+        timebar.update();
 
         userScore = grid.getScore();
 
-        if(currentTime-startTime > timeLimit) {
+        if(timebar.getTimeExpired()) {
             isPlaying = false;
 
             // num_stars are needed after level completes
@@ -156,8 +116,6 @@ public class GameView extends SurfaceView implements Runnable{
         }
 
     }
-
-
 
 
     private void draw() {
@@ -169,10 +127,9 @@ public class GameView extends SurfaceView implements Runnable{
             canvas.drawColor(Color.WHITE);
 
             if(isPlaying) {
-                drawGrid(canvas, paint);
-                drawTopBox(canvas, paint);
+                grid.draw(canvas,paint);
+                timebar.draw(canvas, paint);
                 drawScore(canvas, paint);
-                drawTimebar(canvas, paint);
             }
             else{
                 // temp code: need to display in other screen
@@ -224,7 +181,11 @@ public class GameView extends SurfaceView implements Runnable{
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if(event.getActionMasked()==MotionEvent.ACTION_DOWN){
-            grid.checkColor(event.getX(), event.getY());
+            int clicked = grid.checkColor(event.getX(), event.getY());
+            if(clicked==Box.num_colors)
+                soundManager.playError();
+            else if(clicked>=0)
+                soundManager.playCorrect(clicked);
         }
         return super.onTouchEvent(event);
     }
@@ -262,74 +223,12 @@ public class GameView extends SurfaceView implements Runnable{
         }
     }
 
-    private void drawTimebar(Canvas canvas, Paint paint) {
-        //adding timebar to the screen
-
-        // border
-        paint.setStyle(Paint.Style.STROKE);
-        paint.setColor(getResources().getColor(R.color.timebarBorder));
-        canvas.drawRect(timeBarRect, paint);
-
-        // fill
-        int width = (int) (((screenX - 2*padding)*(currentTime-startTime))/timeLimit);
-        timeBarRect.set(padding, padding,width,2*padding);
-        paint.setStyle(Paint.Style.FILL);
-        paint.setColor(getResources().getColor(R.color.timebarFill));
-        canvas.drawRect(timeBarRect, paint);
-    }
-
     private void drawScore(Canvas canvas, Paint paint) {
         //adding userScore to the screen
         paint.setColor(getResources().getColor(R.color.scoreColor));
         paint.setTextSize(150);
         paint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
         paint.setTextAlign(Paint.Align.CENTER);
-        canvas.drawText(String.valueOf(userScore), screenX/2, 3*padding - (paint.ascent()+paint.descent()), paint);
-    }
-
-    private void drawTopBox(Canvas canvas, Paint paint) {
-        Box topBox = grid.getTopBox();
-
-        //drawing grid for topbox
-        paint.setColor(getResources().getColor(R.color.boxBorder));
-        canvas.drawRect(topBox.getX()-grid.getSpace(),topBox.getY()-grid.getSpace(),
-                topBox.getX()+topBox.getWidth()+grid.getSpace(), topBox.getY()+topBox.getHeight()+grid.getSpace(), paint);
-
-        //drawing top Box
-        paint.setColor(colors[topBox.getColorIndex()]);
-        canvas.drawRect(topBox.getX(), topBox.getY(), topBox.getWidth() + topBox.getX(),
-                topBox.getHeight() + topBox.getY(), paint);
-    }
-
-    private void drawGrid(Canvas canvas, Paint paint) {
-        //draw grid outer box
-        paint.setColor(getResources().getColor(R.color.boxBorder));
-        canvas.drawRect(grid.getLeftX(), grid.getTopY(), grid.getGrid_width() + grid.getLeftX(),
-                grid.getGrid_height() + grid.getTopY(), paint);
-
-        //drawing 9 boxes in the grid
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                Box box = grid.getBox(i, j);
-                paint.setColor(colors[box.getColorIndex()]);
-                canvas.drawRect(box.getX(), box.getY(), box.getWidth() + box.getX(),
-                        box.getHeight() + box.getY(), paint);
-
-                //draw wrong mark on wrong click
-                if(box.getClicked()==-1){
-                    soundPool.play(errorSound,1,1,1,0,1);
-                    canvas.drawBitmap(wrongSymbol, box.getX(), box.getY(), paint);
-                    box.setClicked(0);
-                }
-
-                //draw circle on correct click
-                if(box.getClicked()==1){
-                    soundPool.play(correctSounds[box.getColorIndex()],1,1,1,0,1);
-                    canvas.drawBitmap(correctSymbol, box.getX(), box.getY(), paint);
-                    box.setColorIndex(box.getRandomColor());
-                    box.setClicked(0);
-                }
-            }
-        }
+        canvas.drawText(String.valueOf(userScore), screenX/2, 3*grid.getSpace() - (paint.ascent()+paint.descent()), paint);
     }
 }
