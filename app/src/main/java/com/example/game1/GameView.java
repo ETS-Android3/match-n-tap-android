@@ -42,7 +42,7 @@ public class GameView extends SurfaceView implements Runnable{
     SharedPreferences sharedPreferences;
 
     private Grid grid;
-    private SoundManager soundManager;
+    private static SoundManager soundManager;
     private Timebar timebar;
 
     private SurfaceHolder surfaceHolder = getHolder();
@@ -89,6 +89,7 @@ public class GameView extends SurfaceView implements Runnable{
         userScore = grid.getScore();
 
         num_stars = 0;
+        soundManager.playBackground();
     }
 
     @Override
@@ -109,10 +110,13 @@ public class GameView extends SurfaceView implements Runnable{
 
         if(timebar.getTimeExpired()) {
             isPlaying = false;
-
             // num_stars are needed after level completes
             num_stars = getNumStars(userScore);
             updateHighScoresinSharedPref(userScore);
+        }
+
+        if(isPlaying==false) {
+            soundManager.stopBackground();
         }
 
     }
@@ -188,6 +192,11 @@ public class GameView extends SurfaceView implements Runnable{
                 soundManager.playCorrect(clicked);
         }
         return super.onTouchEvent(event);
+    }
+
+
+    public static void stopMusic(){
+        soundManager.stopBackground();
     }
 
     private int getNumStars(int userScore) {
