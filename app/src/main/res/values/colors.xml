@@ -3,5 +3,12 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
-    <color name="gray">#808080</color>
+    <color name="timebarBorder">#808080</color>
+    <color name="timebarFill">#00FF00</color>
+    <color name="boxBorder">#000000</color>
+    <color name="scoreColor">#F00</color>
+    <color name="box1">#F00</color>
+    <color name="box2">#0F0</color>
+    <color name="box3">#00F</color>
+    <color name="box4">#F0F</color>
 </resources>

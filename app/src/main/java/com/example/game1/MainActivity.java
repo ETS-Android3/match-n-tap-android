@@ -23,4 +23,9 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, HighScore.class);
         startActivity(intent);
     }
+
+    public void showLevels(View v){
+        Intent intent = new Intent(this, LevelsActivity.class);
+        startActivity(intent);
+    }
 }
