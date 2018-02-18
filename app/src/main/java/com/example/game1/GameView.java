@@ -118,7 +118,6 @@ public class GameView extends SurfaceView implements Runnable{
         if(isPlaying==false) {
             soundManager.stopBackground();
         }
-
     }
 
 
@@ -189,7 +188,7 @@ public class GameView extends SurfaceView implements Runnable{
             if(clicked==Box.num_colors)
                 soundManager.playError();
             else if(clicked>=0)
-                soundManager.playCorrect(clicked);
+                soundManager.playCorrect();
         }
         return super.onTouchEvent(event);
     }

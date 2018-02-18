@@ -14,7 +14,7 @@ public class Timebar {
     private long currentTime, startTime, timeLimit;
     private int padding, maxWidth;
     private boolean isTimeExpired=false;
-
+    private int width;
     private int borderColor, fillColor;
 
     public Timebar(Context context, int padding, long timeLimit, int screenX) {
@@ -22,7 +22,6 @@ public class Timebar {
         this.padding = padding;
         this.maxWidth = screenX-2*padding;
         timeBarRect = new Rect(padding, padding,screenX -padding,2*padding);
-
         borderColor = context.getResources().getColor(R.color.timebarBorder);
         fillColor = context.getResources().getColor(R.color.timebarFill);
 
@@ -32,21 +31,21 @@ public class Timebar {
 
     public void update(){
         currentTime = System.currentTimeMillis();
-
         long timeElapsed = currentTime-startTime;
         if(timeElapsed > timeLimit)
             isTimeExpired = true;
-        int width = (int) ((maxWidth*(timeElapsed))/timeLimit);
-        timeBarRect.set(padding, padding,width,2*padding);
+        width = (int) ((maxWidth*(timeElapsed))/timeLimit);
     }
 
     public void draw(Canvas canvas, Paint paint){
         // border
+        timeBarRect.set(padding, padding,maxWidth+padding,2*padding);
         paint.setStyle(Paint.Style.STROKE);
         paint.setColor(borderColor);
         canvas.drawRect(timeBarRect, paint);
 
         // fill
+        timeBarRect.set(padding, padding,width,2*padding);
         paint.setStyle(Paint.Style.FILL);
         paint.setColor(fillColor);
         canvas.drawRect(timeBarRect, paint);
