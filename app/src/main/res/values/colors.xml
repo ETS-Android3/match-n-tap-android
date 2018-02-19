@@ -11,4 +11,6 @@
     <color name="box2">#0F0</color>
     <color name="box3">#00F</color>
     <color name="box4">#F0F</color>
+    <color name="levelScreenBg">#000</color>
+    <color name="levelCellBg">#FFF</color>
 </resources>

@@ -1,13 +1,17 @@
 package com.example.game1;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 /**
@@ -19,10 +23,22 @@ public class LevelAdapter extends BaseAdapter {
 
     private final Context mContext;
     private final Level[] levels;
+    private Bitmap lockDrawable, starDrawable;
 
-    public LevelAdapter(Context context,Level[] levels){
+    private int lockWidth, starWidth;
+
+    public LevelAdapter(Context context, Level[] levels, int x, int y){
         mContext = context;
         this.levels = levels;
+
+        lockWidth = (x-300)/4;
+        starWidth = (x-180)/8;
+        lockDrawable = BitmapFactory.decodeResource(context.getResources(), R.drawable.lock);
+        lockDrawable = Bitmap.createScaledBitmap(lockDrawable, lockWidth, lockWidth,false);
+
+        starDrawable = BitmapFactory.decodeResource(context.getResources(), R.drawable.star);
+        starDrawable = Bitmap.createScaledBitmap(starDrawable,starWidth, starWidth,false);
+
     }
 
     @Override
@@ -40,60 +56,69 @@ public class LevelAdapter extends BaseAdapter {
         return 0;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         final Level level = levels[position];
-        if (convertView == null) {
+        //if (convertView == null) {
             final LayoutInflater layoutInflater = LayoutInflater.from(mContext);
             convertView = layoutInflater.inflate(R.layout.layout_level, null);
-        }
-        RelativeLayout theLayout = (RelativeLayout) convertView.findViewById(R.id.layout_level);
+       // }
+
+        TableLayout theLayout = (TableLayout) convertView.findViewById(R.id.table_layout);
+
         if(level.isUnlocked()==false){
+            //TableRow tableRow = new TableRow(mContext);
             ImageView image = new ImageView(mContext);
-            RelativeLayout.LayoutParams vp = new RelativeLayout.LayoutParams
-                    (RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-            vp.width = 100;
+            ViewGroup.LayoutParams vp = new ViewGroup.LayoutParams
+                    (ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             image.setLayoutParams(vp);
-            image.setImageDrawable(mContext.getResources().getDrawable(R.drawable.lock));
+            image.setImageBitmap(lockDrawable);
+            image.setPadding(40,30,40,30);
+            image.setAlpha(0.5f);
+            //tableRow.addView(image);
             theLayout.addView(image);
         }else{
             int num_stars = level.getNumStars();
-            int width = ((GridView)parent).getColumnWidth()/2;
-            RelativeLayout.LayoutParams vp = new RelativeLayout.LayoutParams(width,width);
-            vp.width = 40;
+
+            TableRow tableRow = new TableRow(mContext);
+
+            TableRow.LayoutParams vp = new TableRow.LayoutParams
+                    (TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT);
             if(num_stars>=1) {
                 ImageView star = new ImageView(mContext);
-                vp.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-                vp.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
                 star.setLayoutParams(vp);
-                star.setImageDrawable(mContext.getResources().getDrawable(R.drawable.star));
-                theLayout.addView(star);
+                star.setImageBitmap(starDrawable);
+                tableRow.addView(star);
             }
             if(num_stars>=2){
                 ImageView star = new ImageView(mContext);
-                vp.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-                vp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
                 star.setLayoutParams(vp);
-                star.setImageDrawable(mContext.getResources().getDrawable(R.drawable.star));
-                theLayout.addView(star);
+                star.setImageBitmap(starDrawable);
+                tableRow.addView(star);
             }
+            theLayout.addView(tableRow);
+
+            TableRow tableRow2 = new TableRow(mContext);
+
+            TextView text = new TextView(mContext);
+            text.setText(String.valueOf(position+1));
+            text.setTextSize(40);
+            text.setWidth(starWidth);
+            text.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+            tableRow2.addView(text);
+
             if(num_stars>=3){
                 ImageView star = new ImageView(mContext);
-                vp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-                vp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
                 star.setLayoutParams(vp);
-                star.setImageDrawable(mContext.getResources().getDrawable(R.drawable.star));
-                theLayout.addView(star);
+                star.setImageBitmap(starDrawable);
+                tableRow2.addView(star);
             }
-            TextView text = new TextView(mContext);
-            vp.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-            vp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-            text.setLayoutParams(vp);
-            text.setText(""+level.getLevel_num());
-            theLayout.addView(text);
+
+            theLayout.addView(tableRow2);
+
+
         }
-        /*final LayoutInflater layoutInflater = LayoutInflater.from(mContext);
-        convertView = layoutInflater.inflate();*/
         return convertView;
     }
 }
