@@ -1,6 +1,8 @@
 package com.example.game1;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,7 +69,8 @@ public class LevelAdapter extends BaseAdapter {
                 vp.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
                 star.setLayoutParams(vp);
                 star.setImageDrawable(mContext.getResources().getDrawable(R.drawable.star));
-                theLayout.addView(star);
+                //theLayout.addView(star);
+                theLayout.addView(star,0,vp);
             }
             if(num_stars>=2){
                 ImageView star = new ImageView(mContext);

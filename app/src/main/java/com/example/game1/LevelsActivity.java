@@ -22,7 +22,7 @@ public class LevelsActivity extends AppCompatActivity {
         for(int i=0;i<4;i++){
             levels[i] = new Level();
         }
-        levels[1].setNumStars(2);
+        levels[1].setNumStars(3);
         levels[1].setUnlocked(true);
         LevelAdapter levelsAdapter = new LevelAdapter(this, levels);
         gridView.setAdapter(levelsAdapter);
