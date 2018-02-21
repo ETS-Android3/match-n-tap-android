@@ -15,8 +15,8 @@ public class Grid {
     private Box topBox;
 
     //box width, height and space between boxes
-    private int width;
-    private int height;
+    private static int width;
+    private static int height;
     private int space;
 
     //grid width and height
@@ -130,11 +130,11 @@ public class Grid {
         return score;
     }
 
-    public int getWidth() {
+    public static int getWidth() {
         return width;
     }
 
-    public int getHeight() {
+    public static int getHeight() {
         return height;
     }
 
