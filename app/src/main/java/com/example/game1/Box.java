@@ -20,7 +20,6 @@ public class Box {
     private int x, y;
     private int width, height, space;
     private int colorIndex;
-    private int newColorIndex;
     private int borderColor;
     private int timeInterval; //to change the color
 
@@ -31,9 +30,7 @@ public class Box {
     private long startTime;
     private long currentTime;
 
-    private boolean isChanging=false;
     private int clicked = 0; //0: not clicked, -1: wrong click; 1: correct click
-    private int iterations = 0;
 
 
     public Box(Context context, int x, int y, int width, int height, int space, int timeInterval) {
@@ -68,18 +65,10 @@ public class Box {
     }
 
     public void update() {
-        if(isChanging) iterations++;
-        if(iterations>=10 && iterations<20)
-            colorIndex = newColorIndex;
-        else if(iterations>=20) {
-            isChanging = false;
-            iterations = 0;
-        }
-
-        Log.d(TAG, "isChanging = " + isChanging + "; iterations = " + iterations);
         currentTime = System.currentTimeMillis();
         if (currentTime - startTime > timeInterval) {
             changeColor(getRandomColor());
+            startTime = currentTime;
         }
     }
 
@@ -90,14 +79,6 @@ public class Box {
 
         // draw box
         paint.setColor(possibleColors[colorIndex]);
-        if(iterations > 0 && iterations <= 10) {
-            //decreasing color
-            paint.setAlpha(255-10*iterations);
-        }
-        else if(iterations > 10 && iterations <= 20){
-            //increasing color
-            paint.setAlpha(255-10*(20-iterations));
-        }
         canvas.drawRect(x, y, width + x, height + y, paint);
 
         //draw wrong mark on wrong click
@@ -122,15 +103,11 @@ public class Box {
             i = generator.nextInt(num_colors);
         } while (i == colorIndex);
 
-        startTime = currentTime;
-
         return i;
     }
 
     public void changeColor(int newColorIndex){
-        // 10 frames lighten 10 darken
-        isChanging = true;
-        this.newColorIndex = newColorIndex;
+        this.colorIndex = newColorIndex;
     }
 
     public boolean isTouched(float touchX, float touchY){

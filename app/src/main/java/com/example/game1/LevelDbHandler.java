@@ -89,6 +89,7 @@ public class LevelDbHandler extends SQLiteOpenHelper{
         boolean isUnlocked = Integer.parseInt(cursor.getString(1))==1?true:false;
 
         Level level = new Level(Integer.parseInt(cursor.getString(0)), Integer.parseInt(cursor.getString(2)), isUnlocked, colors);
+        db.close();
         return level;
     }
 
@@ -97,10 +98,11 @@ public class LevelDbHandler extends SQLiteOpenHelper{
         String countQuery = "SELECT  * FROM " + TABLE_NAME;
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(countQuery, null);
+        int result = cursor.getCount();
         cursor.close();
-
+        db.close();
         // return count
-        return cursor.getCount();
+        return result;
     }
 
     // Updating single level
@@ -116,7 +118,9 @@ public class LevelDbHandler extends SQLiteOpenHelper{
         values.put(COLOR_3,level.getColorCollected()[2]);
         values.put(COLOR_4,level.getColorCollected()[3]);
 
-        return db.update(TABLE_NAME,values,LEVEL_NUM+"=?",new String[]{String.valueOf(level.getLevel_num())});
+        int result = db.update(TABLE_NAME,values,LEVEL_NUM+"=?",new String[]{String.valueOf(level.getLevel_num())});
+        db.close();
+        return result;
     }
 
     // Deleting single level

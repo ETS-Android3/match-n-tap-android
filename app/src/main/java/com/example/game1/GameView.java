@@ -122,12 +122,12 @@ public class GameView extends SurfaceView implements Runnable{
                     SharedPreferences.Editor editor = currentLevelSP.edit();
                     editor.putInt("curr_level", current_level + 1);
                     editor.apply();
-                    Level level = new Level(current_level,num_stars,true,null);
+                    Level level = new Level(current_level,num_stars,true,new int[4]);
                     MainActivity.levelDbHandler.addLevel(level);
                     LevelsActivity.levels[current_level + 1].setUnlocked(true);
                 }else{
                     if(MainActivity.levelDbHandler.getLevel(level_num).getNumStars()<num_stars) {
-                        Level level = new Level(level_num,num_stars,true,null);
+                        Level level = new Level(level_num,num_stars,true,new int[4]);
                         MainActivity.levelDbHandler.updateLevel(level);
                     }
                 }
