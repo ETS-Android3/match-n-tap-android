@@ -17,6 +17,13 @@ public class Level {
         level_num = 0;
     }
 
+    public Level(  int level_num, int numStars, boolean isUnlocked,  int[] colorCollected) {
+        this.colorCollected = colorCollected;
+        this.isUnlocked = isUnlocked;
+        this.numStars = numStars;
+        this.level_num = level_num;
+    }
+
     public int[] getColorCollected() {
         return colorCollected;
     }
@@ -25,7 +32,7 @@ public class Level {
         this.colorCollected = colorCollected;
     }
 
-    public boolean isUnlocked() {
+    public boolean getIsUnlocked() {
         return isUnlocked;
     }
 

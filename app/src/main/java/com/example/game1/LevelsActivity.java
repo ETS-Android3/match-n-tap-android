@@ -12,7 +12,8 @@ import android.widget.RelativeLayout;
 public class LevelsActivity extends AppCompatActivity {
 
     private static final String TAG = "LevelsActivity";
-    private Level[] levels = new Level[20];
+    public static Level[] levels = new Level[20];
+    private int level_Count;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,16 +23,11 @@ public class LevelsActivity extends AppCompatActivity {
         for(int i=0;i<20;i++){
             levels[i] = new Level();
         }
-
-        levels[0].setNumStars(1);
         levels[0].setUnlocked(true);
-
-        levels[1].setNumStars(2);
-        levels[1].setUnlocked(true);
-
-        levels[4].setNumStars(3);
-        levels[4].setUnlocked(true);
-
+        level_Count = MainActivity.levelDbHandler.getLevelsCount();
+        for(int i=0;i<level_Count;i++){
+            levels[i] = MainActivity.levelDbHandler.getLevel(i+1);
+        }
         Point size = new Point();
         getWindowManager().getDefaultDisplay().getSize(size);
 

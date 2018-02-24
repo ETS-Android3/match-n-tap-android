@@ -11,6 +11,7 @@ import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.media.AudioManager;
 import android.media.SoundPool;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -23,11 +24,11 @@ public class GameView extends SurfaceView implements Runnable{
 
     private static final String TAG = "GameView";
 
+
     // constants:
     private final int score1;
     private final int score2;
     private final int score3;
-    // ---
 
     private boolean isPlaying = true;
     private Thread gameThread = null;
@@ -35,11 +36,14 @@ public class GameView extends SurfaceView implements Runnable{
     private int userScore;
     private int num_stars;
 
+    private int level_num;
+    private int current_level;
+
     //the high Scores Holder
     private int highScore[] = new int[4];
 
     //Shared Preferences to store the High Scores
-    SharedPreferences sharedPreferences;
+    SharedPreferences sharedPreferences,currentLevelSP;
 
     private Grid grid;
     private static SoundManager soundManager;
@@ -49,17 +53,21 @@ public class GameView extends SurfaceView implements Runnable{
 
     public static Bitmap wrongSymbol, correctSymbol;
 
-
     int screenX;
     int screenY;
 
-
-    public GameView(Context context, int screenX, int screenY) {
+    public GameView(Context context,int level_number, int screenX, int screenY) {
 
         super(context);
 
         this.screenX = screenX;
         this.screenY = screenY;
+
+        level_num = level_number;
+        currentLevelSP = context.getSharedPreferences("CURR_LEVEL",Context.MODE_PRIVATE);
+        current_level = currentLevelSP.getInt("curr_level",1);
+        Log.d(TAG,"level_num="+level_number);
+        Log.d(TAG,"current level"+current_level);
 
         grid = new Grid(context, screenX, screenY);
         soundManager = new SoundManager(context);
@@ -71,12 +79,9 @@ public class GameView extends SurfaceView implements Runnable{
         correctSymbol = BitmapFactory.decodeResource(context.getResources(), R.drawable.correct);
         correctSymbol = Bitmap.createScaledBitmap(correctSymbol,grid.getWidth(),grid.getHeight(),false);
 
-
         score1 = 800;
         score2 = 1000;
         score3 = 1200;
-
-        //--
 
         sharedPreferences = context.getSharedPreferences("SHAR_PREF_NAME",Context.MODE_PRIVATE);
 
@@ -99,7 +104,6 @@ public class GameView extends SurfaceView implements Runnable{
             draw();
             control();
         }
-
     }
 
     private void update() {
@@ -112,6 +116,22 @@ public class GameView extends SurfaceView implements Runnable{
             isPlaying = false;
             // num_stars are needed after level completes
             num_stars = getNumStars(userScore);
+            if(num_stars>0) {
+                //level_no = 0 means current level opened through play now option
+                if(level_num == 0 || level_num==current_level){
+                    SharedPreferences.Editor editor = currentLevelSP.edit();
+                    editor.putInt("curr_level", current_level + 1);
+                    editor.apply();
+                    Level level = new Level(current_level,num_stars,true,null);
+                    MainActivity.levelDbHandler.addLevel(level);
+                    LevelsActivity.levels[current_level + 1].setUnlocked(true);
+                }else{
+                    if(MainActivity.levelDbHandler.getLevel(level_num).getNumStars()<num_stars) {
+                        Level level = new Level(level_num,num_stars,true,null);
+                        MainActivity.levelDbHandler.updateLevel(level);
+                    }
+                }
+            }
             updateHighScoresinSharedPref(userScore);
         }
 
@@ -237,6 +257,6 @@ public class GameView extends SurfaceView implements Runnable{
         paint.setTextSize(150);
         paint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
         paint.setTextAlign(Paint.Align.CENTER);
-        canvas.drawText(String.valueOf(userScore), screenX/2, 3*grid.getSpace() - (paint.ascent()+paint.descent()), paint);
+        canvas.drawText(String.valueOf(current_level)+" "+String.valueOf(userScore)+" "+String.valueOf(level_num), screenX/2, 3*grid.getSpace() - (paint.ascent()+paint.descent()), paint);
     }
 }

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/levelScreenBg"
+    android:background="@drawable/bg1"
     tools:context="com.example.game1.LevelsActivity">
 
     <GridView
@@ -18,5 +18,5 @@
         android:horizontalSpacing="20dp"
         android:verticalSpacing="20dp"
         android:numColumns="4"
-        android:stretchMode="columnWidth"/>
+        android:stretchMode="columnWidth" />
 </FrameLayout>
