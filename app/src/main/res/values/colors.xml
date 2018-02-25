@@ -3,8 +3,8 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
-    <color name="timebarBorder">#808080</color>
-    <color name="timebarFill">#00FF00</color>
+    <color name="timebarBorder">#BBB</color>
+    <color name="timebarFill">#00BB00</color>
     <color name="boxBorder">#000000</color>
     <color name="scoreColor">#F00</color>
     <color name="box1">#F00</color>
@@ -13,4 +13,6 @@
     <color name="box4">#F0F</color>
     <color name="levelScreenBg">#000</color>
     <color name="levelCellBg">#FFF</color>
+    <color name="levelColor">#FFF</color>
+    <color name="levelBgColor">#808080</color>
 </resources>

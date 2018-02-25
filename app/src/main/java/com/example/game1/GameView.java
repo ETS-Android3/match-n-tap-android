@@ -257,6 +257,34 @@ public class GameView extends SurfaceView implements Runnable{
         paint.setTextSize(150);
         paint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
         paint.setTextAlign(Paint.Align.CENTER);
-        canvas.drawText(String.valueOf(current_level)+" "+String.valueOf(userScore)+" "+String.valueOf(level_num), screenX/2, 3*grid.getSpace() - (paint.ascent()+paint.descent()), paint);
+        canvas.drawText(String.valueOf(userScore),
+                screenX/2, 3*grid.getSpace() - (paint.ascent()+paint.descent()), paint);
+        drawLevelNum(canvas, paint);
+
+
+    }
+
+    private void drawLevelNum(Canvas canvas, Paint paint) {
+        // displaying level number
+        int level_to_display;
+        if(level_num==0){
+            level_to_display = current_level;
+        }
+        else{
+            level_to_display = level_num;
+        }
+
+        // draw circle to display level number in the circle
+        float radius = 50+grid.getSpace()/2;
+        paint.setColor(getResources().getColor(R.color.levelBgColor));
+        canvas.drawCircle(radius, radius, radius, paint);
+
+        // draw text for level number
+        paint.setColor(getResources().getColor(R.color.levelColor));
+        paint.setTextSize(100);
+        paint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.NORMAL));
+        paint.setTextAlign(Paint.Align.CENTER);
+        canvas.drawText(String.valueOf(level_to_display),
+                radius, grid.getSpace() - (paint.ascent()+paint.descent()), paint);
     }
 }

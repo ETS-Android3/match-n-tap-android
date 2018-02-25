@@ -41,9 +41,7 @@ public class GameActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int id) {
 
                         GameView.stopMusic();
-                        Intent startMain = new Intent(Intent.ACTION_MAIN);
-                        startMain.addCategory(Intent.CATEGORY_HOME);
-                        startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        Intent startMain = new Intent(GameActivity.this, MainActivity.class);
                         startActivity(startMain);
                         finish();
                     }

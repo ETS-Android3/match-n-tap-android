@@ -4,13 +4,14 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.RectF;
 
 /**
  * Created by jyothsna on 17/2/18.
  */
 
 public class Timebar {
-    private Rect timeBarRect; //for time bar
+    private RectF timeBarRect; //for time bar
     private long currentTime, startTime, timeLimit;
     private int padding, maxWidth;
     private boolean isTimeExpired=false;
@@ -20,8 +21,8 @@ public class Timebar {
     public Timebar(Context context, int padding, long timeLimit, int screenX) {
         this.timeLimit = timeLimit;
         this.padding = padding;
-        this.maxWidth = screenX-2*padding;
-        timeBarRect = new Rect(padding, padding,screenX -padding,2*padding);
+        this.maxWidth = screenX-2*padding-100;
+        timeBarRect = new RectF(padding+100, padding,screenX -padding,2*padding);
         borderColor = context.getResources().getColor(R.color.timebarBorder);
         fillColor = context.getResources().getColor(R.color.timebarFill);
 
@@ -38,17 +39,20 @@ public class Timebar {
     }
 
     public void draw(Canvas canvas, Paint paint){
+        // level number
+
+
         // border
-        timeBarRect.set(padding, padding,maxWidth+padding,2*padding);
-        paint.setStyle(Paint.Style.STROKE);
+        timeBarRect.set(padding+100, padding,maxWidth+padding+100,2*padding);
+        //paint.setStyle(Paint.Style.STROKE);
         paint.setColor(borderColor);
-        canvas.drawRect(timeBarRect, paint);
+        canvas.drawRoundRect(timeBarRect, 100, 100, paint);
 
         // fill
-        timeBarRect.set(padding, padding,width,2*padding);
+        timeBarRect.set(padding+100, padding,width+padding+100,2*padding);
         paint.setStyle(Paint.Style.FILL);
         paint.setColor(fillColor);
-        canvas.drawRect(timeBarRect, paint);
+        canvas.drawRoundRect(timeBarRect, 100, 100, paint);
     }
 
     public boolean getTimeExpired(){
