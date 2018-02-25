@@ -38,6 +38,7 @@ public class GameView extends SurfaceView implements Runnable{
 
     private int level_num;
     private int current_level;
+    private int level_to_display;
 
     //the high Scores Holder
     private int highScore[] = new int[4];
@@ -69,7 +70,15 @@ public class GameView extends SurfaceView implements Runnable{
         Log.d(TAG,"level_num="+level_number);
         Log.d(TAG,"current level"+current_level);
 
-        grid = new Grid(context, screenX, screenY);
+
+        if(level_num==0){
+            level_to_display = current_level;
+        }
+        else{
+            level_to_display = level_num;
+        }
+
+        grid = new Grid(context, screenX, screenY, 60000/level_to_display, (5- (level_to_display-1)/5)*1000);
         soundManager = new SoundManager(context);
         timebar = new Timebar(context, grid.getSpace(), 60000, screenX);
 
@@ -265,15 +274,6 @@ public class GameView extends SurfaceView implements Runnable{
     }
 
     private void drawLevelNum(Canvas canvas, Paint paint) {
-        // displaying level number
-        int level_to_display;
-        if(level_num==0){
-            level_to_display = current_level;
-        }
-        else{
-            level_to_display = level_num;
-        }
-
         // draw circle to display level number in the circle
         float radius = 50+grid.getSpace()/2;
         paint.setColor(getResources().getColor(R.color.levelBgColor));
