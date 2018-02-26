@@ -133,7 +133,7 @@ public class GameView extends SurfaceView implements Runnable{
                     editor.apply();
                     Level level = new Level(current_level,num_stars,true,new int[4]);
                     MainActivity.levelDbHandler.addLevel(level);
-                    LevelsActivity.levels[current_level + 1].setUnlocked(true);
+                    MainActivity.levels[current_level + 1].setUnlocked(true);
                 }else{
                     if(MainActivity.levelDbHandler.getLevel(level_num).getNumStars()<num_stars) {
                         Level level = new Level(level_num,num_stars,true,new int[4]);
@@ -276,11 +276,11 @@ public class GameView extends SurfaceView implements Runnable{
     private void drawLevelNum(Canvas canvas, Paint paint) {
         // draw circle to display level number in the circle
         float radius = 50+grid.getSpace()/2;
-        paint.setColor(getResources().getColor(R.color.levelBgColor));
+        paint.setColor(getResources().getColor(R.color.timebarFill));
         canvas.drawCircle(radius, radius, radius, paint);
 
         // draw text for level number
-        paint.setColor(getResources().getColor(R.color.levelColor));
+        paint.setColor(getResources().getColor(R.color.colorPrimaryDark));
         paint.setTextSize(100);
         paint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.NORMAL));
         paint.setTextAlign(Paint.Align.CENTER);

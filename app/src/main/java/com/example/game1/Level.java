@@ -17,7 +17,7 @@ public class Level {
         level_num = 0;
     }
 
-    public Level(  int level_num, int numStars, boolean isUnlocked,  int[] colorCollected) {
+    public Level(int level_num, int numStars, boolean isUnlocked,  int[] colorCollected) {
         this.colorCollected = colorCollected;
         this.isUnlocked = isUnlocked;
         this.numStars = numStars;
@@ -37,7 +37,7 @@ public class Level {
     }
 
     public void setUnlocked(boolean unlocked) {
-        isUnlocked = unlocked;
+        this.isUnlocked = unlocked;
     }
 
     public int getNumStars() {

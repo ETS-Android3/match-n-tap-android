@@ -8,12 +8,15 @@ import android.view.View;
 public class MainActivity extends AppCompatActivity {
 
     public static LevelDbHandler levelDbHandler;
-
+    public static Level[] levels = new Level[20];
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         levelDbHandler = new LevelDbHandler(this);
+        for(int i=0;i<20;i++){
+            levels[i] = new Level();
+        }
         //hello world
     }
 

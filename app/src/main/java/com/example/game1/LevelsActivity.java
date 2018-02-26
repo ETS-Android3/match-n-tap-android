@@ -12,7 +12,7 @@ import android.widget.RelativeLayout;
 public class LevelsActivity extends AppCompatActivity {
 
     private static final String TAG = "LevelsActivity";
-    public static Level[] levels = new Level[20];
+
     private int level_Count;
 
     @Override
@@ -20,18 +20,15 @@ public class LevelsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_levels);
         GridView gridView = (GridView)findViewById(R.id.gridView);
-        for(int i=0;i<20;i++){
-            levels[i] = new Level();
-        }
         level_Count = MainActivity.levelDbHandler.getLevelsCount();
         for(int i=0;i<level_Count;i++){
-            levels[i] = MainActivity.levelDbHandler.getLevel(i+1);
+            MainActivity.levels[i] = MainActivity.levelDbHandler.getLevel(i+1);
         }
-        levels[level_Count].setUnlocked(true);
+        MainActivity.levels[level_Count].setUnlocked(true);
         Point size = new Point();
         getWindowManager().getDefaultDisplay().getSize(size);
 
-        LevelAdapter levelsAdapter = new LevelAdapter(this, levels, size.x, size.y);
+        LevelAdapter levelsAdapter = new LevelAdapter(this, MainActivity.levels, size.x, size.y);
         gridView.setAdapter(levelsAdapter);
     }
 }
