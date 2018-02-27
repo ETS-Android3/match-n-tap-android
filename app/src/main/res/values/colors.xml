@@ -7,11 +7,11 @@
     <color name="timebarFill">#00BB00</color>
     <color name="boxBorder">#000000</color>
     <color name="scoreColor">#F00</color>
-    <color name="box1">#F00</color>
+    <color name="box1">#FFBB00</color>
     <color name="yellow">#FFFF00</color>
-    <color name="box2">#0F0</color>
-    <color name="box3">#00F</color>
-    <color name="box4">#F0F</color>
+    <color name="box2">#375E97</color>
+    <color name="box3">#FB6542</color>
+    <color name="box4">#3F681C</color>
     <color name="levelScreenBg">#000</color>
     <color name="levelCellBg">#FFF</color>
     <color name="levelColor">#FFF</color>
