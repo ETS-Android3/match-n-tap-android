@@ -33,7 +33,7 @@ public class Grid {
 
     private int score=0;
 
-    public Grid(Context context, int screenX, int screenY, int topBoxTime, int gridBoxTime) {
+    public Grid(Context context, int screenX, int screenY, int topBoxTime, int gridBoxTime, int range) {
 
         //setting box dimensions and space
         width = 4*(screenX)/15;
@@ -57,7 +57,7 @@ public class Grid {
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 Random rand = new Random();
-                int timeInterval = rand.nextInt(2000)+gridBoxTime;
+                int timeInterval = rand.nextInt(range)+gridBoxTime;
                 boxes[i][j] = new Box(context, leftX + space + i * (width + space),
                         topY + space + j * (height + space), width, height, space, timeInterval);
             }
@@ -78,7 +78,10 @@ public class Grid {
 
         if(IsColorPresent()==false){
             Random rand = new Random();
-            boxes[rand.nextInt(3)][rand.nextInt(3)].changeColor(topBox.getColorIndex());
+            int n = rand.nextInt(3);
+            for(int i=0;i<n;i++) {
+                boxes[rand.nextInt(3)][rand.nextInt(3)].changeColor(topBox.getColorIndex());
+            }
         }
     }
 
