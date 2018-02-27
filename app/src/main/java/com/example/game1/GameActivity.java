@@ -6,18 +6,24 @@ import android.graphics.Point;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
 
 public class GameActivity extends AppCompatActivity {
 
+    private static final String TAG = "GameActivity";
     private GameView gameView;
+    private int level_num;
+    private Point size;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Point size = new Point();
+        size = new Point();
         getWindowManager().getDefaultDisplay().getSize(size);
-        gameView = new GameView(this, getIntent().getIntExtra("level_num",0),size.x, size.y);
+        level_num = getIntent().getIntExtra("level_num",0);
+        gameView = new GameView(this, level_num,size.x, size.y);
         setContentView(gameView);
     }
 

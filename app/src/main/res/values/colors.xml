@@ -15,4 +15,7 @@
     <color name="levelCellBg">#FFF</color>
     <color name="levelColor">#FFF</color>
     <color name="levelBgColor">#808080</color>
+    <color name="popupBg">#000000</color>
+    <color name="white">#FFF</color>
+
 </resources>
