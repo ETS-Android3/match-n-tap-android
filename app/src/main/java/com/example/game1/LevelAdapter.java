@@ -104,17 +104,15 @@ public class LevelAdapter extends BaseAdapter {
                 row.addView(text);
                 theLayout.addView(row);
             }else {
-
                 TableRow tableRow = new TableRow(mContext);
-
                 TableRow.LayoutParams vp = new TableRow.LayoutParams
                         (colWidth / 2, colWidth / 2);
-                ImageView star1 = new ImageView(mContext);
-                star1.setLayoutParams(vp);
                 if (num_stars >= 1) {
+                    ImageView star1 = new ImageView(mContext);
+                    star1.setLayoutParams(vp);
                     star1.setImageBitmap(starDrawable);
+                    tableRow.addView(star1);
                 }
-                tableRow.addView(star1);
                 if (num_stars >= 2) {
                     ImageView star = new ImageView(mContext);
                     star.setLayoutParams(vp);

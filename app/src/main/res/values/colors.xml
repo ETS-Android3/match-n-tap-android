@@ -8,6 +8,7 @@
     <color name="boxBorder">#000000</color>
     <color name="scoreColor">#F00</color>
     <color name="box1">#F00</color>
+    <color name="yellow">#FFFF00</color>
     <color name="box2">#0F0</color>
     <color name="box3">#00F</color>
     <color name="box4">#F0F</color>

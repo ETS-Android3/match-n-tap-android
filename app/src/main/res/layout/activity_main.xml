@@ -15,7 +15,9 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="142dp"
-        android:text="Play Now"
+        android:text="Play"
+        android:background="@color/box2"
+        android:textStyle="bold"
         android:textSize="18sp"
         android:onClick="startGame"/>
 
@@ -27,13 +29,19 @@
         android:layout_below="@+id/button3"
         android:layout_marginTop="60dp"
         android:text="High Score"
+        android:background="@color/colorAccent"
         android:textSize="18sp"
+        android:textStyle="bold"
+        android:textAllCaps="true"
         android:onClick="displayHighScores"/>
 
     <Button
         android:id="@+id/button5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:background="@color/yellow"
+
         android:layout_centerHorizontal="true"
         android:layout_marginTop="60dp"
         android:text="Levels"

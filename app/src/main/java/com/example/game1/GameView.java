@@ -96,8 +96,14 @@ public class GameView extends SurfaceView implements Runnable{
         else{
             level_to_display = level_num;
         }
-
-        grid = new Grid(context, screenX, screenY, 60000/level_to_display, (5- (level_to_display-1)/5)*1000);
+        int range;
+        if(level_to_display<9){
+            range = 2000;
+        }else{
+            range = 1000;
+        }
+        grid = new Grid(context, screenX, screenY, 1000*(15-((level_to_display-1)/4)*3),
+                (5- (level_to_display-1)/4)*1000,range);
         soundManager = new SoundManager(context);
         timebar = new Timebar(context, grid.getSpace(), 5000, screenX);
 
@@ -164,12 +170,12 @@ public class GameView extends SurfaceView implements Runnable{
                     SharedPreferences.Editor editor = currentLevelSP.edit();
                     editor.putInt("curr_level", current_level + 1);
                     editor.apply();
-                    Level level = new Level(current_level,num_stars,true,new int[4]);
+                    Level level = new Level(current_level, num_stars,true,new int[4]);
                     MainActivity.levelDbHandler.addLevel(level);
                     MainActivity.levels[current_level + 1].setUnlocked(true);
                 }else{
                     if(MainActivity.levelDbHandler.getLevel(level_num).getNumStars()<num_stars) {
-                        Level level = new Level(level_num,num_stars,true,new int[4]);
+                        Level level = new Level(level_num, num_stars,true,new int[4]);
                         MainActivity.levelDbHandler.updateLevel(level);
                     }
                 }

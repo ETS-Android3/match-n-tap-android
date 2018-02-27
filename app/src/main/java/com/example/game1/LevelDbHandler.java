@@ -88,9 +88,9 @@ public class LevelDbHandler extends SQLiteOpenHelper{
         int[] colors = {Integer.parseInt(cursor.getString(3)),Integer.parseInt(cursor.getString(4)),
                 Integer.parseInt(cursor.getString(5)),Integer.parseInt(cursor.getString(6))};
 
-        boolean isUnlocked = Integer.parseInt(cursor.getString(1))==1?false:true;
+        boolean isUnlocked = Integer.parseInt(cursor.getString(2))==1?true:false;
 
-        Level level = new Level(Integer.parseInt(cursor.getString(0)), Integer.parseInt(cursor.getString(2)), isUnlocked, colors);
+        Level level = new Level(Integer.parseInt(cursor.getString(0)), Integer.parseInt(cursor.getString(1)), isUnlocked, colors);
         db.close();
         return level;
     }
