@@ -28,7 +28,8 @@
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             >
         </activity>
-        <activity android:name=".LevelsActivity"></activity>
+        <activity android:name=".LevelsActivity" />
+        <activity android:name=".LevelCompleteActivity"></activity>
     </application>
 
 </manifest>

@@ -1,6 +1,7 @@
 package com.example.game1;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -11,10 +12,16 @@ import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.media.AudioManager;
 import android.media.SoundPool;
+import android.os.Handler;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.PopupWindow;
 
 /**
  * Created by jyothsna on 7/2/18.
@@ -30,7 +37,7 @@ public class GameView extends SurfaceView implements Runnable{
     private final int score2;
     private final int score3;
 
-    private boolean isPlaying = true;
+    private boolean isPlaying;
     private Thread gameThread = null;
 
     private int userScore;
@@ -38,6 +45,11 @@ public class GameView extends SurfaceView implements Runnable{
 
     private int level_num;
     private int current_level;
+
+    public int getLevel_to_display() {
+        return level_to_display;
+    }
+
     private int level_to_display;
 
     //the high Scores Holder
@@ -57,9 +69,16 @@ public class GameView extends SurfaceView implements Runnable{
     int screenX;
     int screenY;
 
+    private Context context;
+
+    //public PopupWindow popupWindow;
+
     public GameView(Context context,int level_number, int screenX, int screenY) {
 
         super(context);
+        isPlaying = true;
+
+        this.context = context;
 
         this.screenX = screenX;
         this.screenY = screenY;
@@ -86,7 +105,7 @@ public class GameView extends SurfaceView implements Runnable{
         grid = new Grid(context, screenX, screenY, 1000*(15-((level_to_display-1)/4)*3),
                 (5- (level_to_display-1)/4)*1000,range);
         soundManager = new SoundManager(context);
-        timebar = new Timebar(context, grid.getSpace(), 60000, screenX);
+        timebar = new Timebar(context, grid.getSpace(), 5000, screenX);
 
         wrongSymbol = BitmapFactory.decodeResource(context.getResources(), R.drawable.wrong);
         wrongSymbol = Bitmap.createScaledBitmap(wrongSymbol,grid.getWidth(),grid.getHeight(),false);
@@ -110,6 +129,11 @@ public class GameView extends SurfaceView implements Runnable{
 
         num_stars = 0;
         soundManager.playBackground();
+
+//        LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+//        View customView = layoutInflater.inflate(R.layout.level_complete,null);
+//
+//        popupWindow = new PopupWindow(customView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
     }
 
     @Override
@@ -119,6 +143,15 @@ public class GameView extends SurfaceView implements Runnable{
             draw();
             control();
         }
+//        final View parent = this;
+//        this.post(new Runnable() {
+//            @Override
+//            public void run() {
+//                //display the popup window
+//                popupWindow.showAtLocation(parent, Gravity.CENTER, 0, 0);
+//                Log.d(TAG, "popup");
+//            }
+//        });
     }
 
     private void update() {
@@ -148,10 +181,17 @@ public class GameView extends SurfaceView implements Runnable{
                 }
             }
             updateHighScoresinSharedPref(userScore);
+
+
         }
 
         if(isPlaying==false) {
             soundManager.stopBackground();
+
+            // go to level complete activity
+            Intent intent = new Intent(context, LevelCompleteActivity.class);
+            intent.putExtra("LevelNum", level_to_display);
+            context.startActivity(intent);
         }
     }
 
@@ -164,12 +204,12 @@ public class GameView extends SurfaceView implements Runnable{
             // background
             canvas.drawColor(Color.WHITE);
 
-            if(isPlaying) {
+            //if(isPlaying) {
                 grid.draw(canvas,paint);
                 timebar.draw(canvas, paint);
                 drawScore(canvas, paint);
-            }
-            else{
+            //}
+            /*else{
                 // temp code: need to display in other screen
 
                 paint.setColor(Color.BLACK);
@@ -186,7 +226,7 @@ public class GameView extends SurfaceView implements Runnable{
                 paint.setTextSize(200);
                 paint.setTextAlign(Paint.Align.CENTER);
                 canvas.drawText("Gameover",canvas.getWidth()/2, canvas.getHeight()/2, paint);
-            }
+            }*/
 
             surfaceHolder.unlockCanvasAndPost(canvas);
         }
