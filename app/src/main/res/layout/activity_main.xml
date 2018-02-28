@@ -15,11 +15,13 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="142dp"
-        android:text="Play"
         android:background="@color/box2"
-        android:textStyle="bold"
+        android:elevation="0dp"
+        android:fontFamily="serif-monospace"
+        android:onClick="startGame"
+        android:text="Play"
         android:textSize="18sp"
-        android:onClick="startGame"/>
+        android:textStyle="bold" />
 
     <Button
         android:id="@+id/button4"
