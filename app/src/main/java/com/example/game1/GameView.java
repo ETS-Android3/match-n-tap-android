@@ -105,17 +105,17 @@ public class GameView extends SurfaceView implements Runnable{
         grid = new Grid(context, screenX, screenY, 1000*(15-((level_to_display-1)/4)*3),
                 (5- (level_to_display-1)/4)*1000,range);
         soundManager = new SoundManager(context);
-        timebar = new Timebar(context, grid.getSpace(), 5000, screenX);
+        timebar = new Timebar(context, grid.getSpace(), 1000*60, screenX);
 
         wrongSymbol = BitmapFactory.decodeResource(context.getResources(), R.drawable.wrong);
         wrongSymbol = Bitmap.createScaledBitmap(wrongSymbol,grid.getWidth(),grid.getHeight(),false);
 
-        correctSymbol = BitmapFactory.decodeResource(context.getResources(), R.drawable.correct);
+        correctSymbol = BitmapFactory.decodeResource(context.getResources(), R.drawable.tick1);
         correctSymbol = Bitmap.createScaledBitmap(correctSymbol,grid.getWidth(),grid.getHeight(),false);
 
-        score1 = 800;
-        score2 = 1000;
-        score3 = 1200;
+        score1 = 1000;
+        score2 = 1400;
+        score3 = 1800;
 
         sharedPreferences = context.getSharedPreferences("SHAR_PREF_NAME",Context.MODE_PRIVATE);
 
@@ -172,7 +172,7 @@ public class GameView extends SurfaceView implements Runnable{
                     editor.apply();
                     Level level = new Level(current_level, num_stars,true,new int[4]);
                     MainActivity.levelDbHandler.addLevel(level);
-                    MainActivity.levels[current_level + 1].setUnlocked(true);
+                    MainActivity.levels[current_level].setUnlocked(true);
                 }else{
                     if(MainActivity.levelDbHandler.getLevel(level_num).getNumStars()<num_stars) {
                         Level level = new Level(level_num, num_stars,true,new int[4]);
@@ -181,18 +181,16 @@ public class GameView extends SurfaceView implements Runnable{
                 }
             }
             updateHighScoresinSharedPref(userScore);
-
-
         }
 
-        if(isPlaying==false) {
+      /*  if(isPlaying==false) {
             soundManager.stopBackground();
 
             // go to level complete activity
             Intent intent = new Intent(context, LevelCompleteActivity.class);
             intent.putExtra("LevelNum", level_to_display);
             context.startActivity(intent);
-        }
+        }*/
     }
 
 
@@ -204,15 +202,22 @@ public class GameView extends SurfaceView implements Runnable{
             // background
             canvas.drawColor(Color.WHITE);
 
-            //if(isPlaying) {
+            if(isPlaying) {
                 grid.draw(canvas,paint);
                 timebar.draw(canvas, paint);
                 drawScore(canvas, paint);
-            //}
-            /*else{
+            }
+            else {
+                soundManager.stopBackground();
+
+                // go to level complete activity
+                Intent intent = new Intent(context, LevelCompleteActivity.class);
+                intent.putExtra("LevelNum", level_to_display);
+                context.startActivity(intent);
+            }
                 // temp code: need to display in other screen
 
-                paint.setColor(Color.BLACK);
+                /*paint.setColor(Color.BLACK);
                 paint.setTextSize(100);
                 paint.setTextAlign(Paint.Align.CENTER);
                 canvas.drawText("Score" + userScore, screenX/2, 150, paint);

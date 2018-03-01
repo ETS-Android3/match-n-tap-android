@@ -4,49 +4,58 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:layout_gravity="center"
     android:background="@drawable/bg1"
+    android:orientation="vertical"
+    android:padding="40dp"
     tools:context="com.example.game1.MainActivity">
 
-    <Button
-        android:id="@+id/button3"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:id="@+id/relativeLayout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="142dp"
-        android:background="@color/box2"
-        android:elevation="0dp"
-        android:fontFamily="serif-monospace"
-        android:onClick="startGame"
-        android:text="Play"
-        android:textSize="18sp"
-        android:textStyle="bold" />
+        android:layout_centerVertical="true"
+        android:orientation="vertical"
+        android:padding="20dp">
 
-    <Button
-        android:id="@+id/button4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@+id/button3"
-        android:layout_marginTop="60dp"
-        android:text="High Score"
-        android:background="@color/colorAccent"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:textAllCaps="true"
-        android:onClick="displayHighScores"/>
+        <Button
+            android:id="@+id/levels"
+            style="@style/button_text"
+            android:layout_width="180dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/play"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_margin="20dp"
+            android:background="@drawable/red_button"
+            android:onClick="showLevels"
+            android:text="Levels" />
 
-    <Button
-        android:id="@+id/button5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textStyle="bold"
-        android:background="@color/yellow"
+        <Button
+            android:id="@+id/highScore"
+            style="@style/button_text"
+            android:layout_width="180dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/levels"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="20dp"
+            android:background="@drawable/red_button"
+            android:onClick="displayHighScores"
+            android:text="High Score"
+            android:textAllCaps="true" />
 
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="60dp"
-        android:text="Levels"
-        android:textSize="18sp"
-        android:onClick="showLevels"/>
+        <Button
+            android:id="@+id/play"
+            style="@style/button_text"
+            android:layout_width="180dp"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="20dp"
+            android:background="@drawable/red_button"
+            android:onClick="startGame"
+            android:text="Play"
+            android:textAllCaps="true" />
+    </RelativeLayout>
+
+
 </RelativeLayout>

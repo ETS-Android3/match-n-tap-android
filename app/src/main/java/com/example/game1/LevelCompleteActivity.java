@@ -21,18 +21,17 @@ public class LevelCompleteActivity extends AppCompatActivity {
         levelNum = getIntent().getIntExtra("LevelNum", 1);
         ImageButton nextButton = (ImageButton) findViewById(R.id.nextButton);
         ImageButton replayButton = (ImageButton) findViewById(R.id.replayButton);
-        if (MainActivity.levels[levelNum + 1].getIsUnlocked() == false) {
+        if (MainActivity.levels[levelNum].getIsUnlocked() == true) {
+            nextButton.setEnabled(true);
+        }else{
             nextButton.setEnabled(false);
             nextButton.setAlpha(0.5f);
         }
-        else
-            nextButton.setEnabled(true);
-
     }
 
     public void playNextLevel(View v) {
         Log.d(TAG, "next level");
-        if (MainActivity.levels[levelNum + 1].getIsUnlocked() == true) {
+        if (MainActivity.levels[levelNum].getIsUnlocked() == true) {
             Intent intent = new Intent(this, GameActivity.class);
             intent.putExtra("level_num", levelNum + 1);
             startActivity(intent);
