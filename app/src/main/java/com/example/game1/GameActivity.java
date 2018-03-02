@@ -23,7 +23,7 @@ public class GameActivity extends AppCompatActivity {
         size = new Point();
         getWindowManager().getDefaultDisplay().getSize(size);
         level_num = getIntent().getIntExtra("level_num",0);
-        gameView = new GameView(this, level_num,size.x, size.y);
+        gameView = new GameView(this, level_num, size.x, size.y);
         setContentView(gameView);
     }
 

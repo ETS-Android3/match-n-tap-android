@@ -155,6 +155,10 @@ public class GameView extends SurfaceView implements Runnable{
     }
 
     private void update() {
+        if(level_to_display>20){
+            Intent intent = new Intent(context, LevelsActivity.class);
+            context.startActivity(intent);
+        }
         grid.update();
         timebar.update();
 
@@ -172,7 +176,9 @@ public class GameView extends SurfaceView implements Runnable{
                     editor.apply();
                     Level level = new Level(current_level, num_stars,true,new int[4]);
                     MainActivity.levelDbHandler.addLevel(level);
-                    MainActivity.levels[current_level].setUnlocked(true);
+                    if(current_level<20){
+                        MainActivity.levels[current_level].setUnlocked(true);
+                    }
                 }else{
                     if(MainActivity.levelDbHandler.getLevel(level_num).getNumStars()<num_stars) {
                         Level level = new Level(level_num, num_stars,true,new int[4]);
@@ -213,6 +219,8 @@ public class GameView extends SurfaceView implements Runnable{
                 // go to level complete activity
                 Intent intent = new Intent(context, LevelCompleteActivity.class);
                 intent.putExtra("LevelNum", level_to_display);
+                intent.putExtra("Score",userScore);
+                intent.putExtra("NumStars",num_stars);
                 context.startActivity(intent);
             }
                 // temp code: need to display in other screen
