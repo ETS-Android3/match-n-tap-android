@@ -33,7 +33,7 @@ public class LevelCompleteActivity extends AppCompatActivity {
         TextView score = (TextView)findViewById(R.id.scoreText);
 
         //displaying score
-        score.setText(scoreValue);
+        score.setText(Integer.toString(scoreValue));
 
         //displaying stars based on score
         if(numStars<1)
@@ -45,8 +45,13 @@ public class LevelCompleteActivity extends AppCompatActivity {
 
         ImageButton nextButton = (ImageButton) findViewById(R.id.nextButton);
         ImageButton replayButton = (ImageButton) findViewById(R.id.replayButton);
-        if (MainActivity.levels[levelNum].getIsUnlocked() == true) {
-            nextButton.setEnabled(true);
+        if(levelNum<20) {
+            if (MainActivity.levels[levelNum].getIsUnlocked() == true) {
+                nextButton.setEnabled(true);
+            } else {
+                nextButton.setEnabled(false);
+                nextButton.setAlpha(0.5f);
+            }
         }else{
             nextButton.setEnabled(false);
             nextButton.setAlpha(0.5f);
@@ -55,10 +60,12 @@ public class LevelCompleteActivity extends AppCompatActivity {
 
     public void playNextLevel(View v) {
         Log.d(TAG, "next level");
-        if (MainActivity.levels[levelNum].getIsUnlocked() == true) {
-            Intent intent = new Intent(this, GameActivity.class);
-            intent.putExtra("level_num", levelNum + 1);
-            startActivity(intent);
+        if(levelNum<20) {
+            if (MainActivity.levels[levelNum].getIsUnlocked() == true) {
+                Intent intent = new Intent(this, GameActivity.class);
+                intent.putExtra("level_num", levelNum + 1);
+                startActivity(intent);
+            }
         }
     }
 

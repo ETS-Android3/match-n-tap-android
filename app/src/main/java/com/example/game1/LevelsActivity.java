@@ -24,7 +24,10 @@ public class LevelsActivity extends AppCompatActivity {
         for(int i=0;i<level_Count;i++){
             MainActivity.levels[i] = MainActivity.levelDbHandler.getLevel(i+1);
         }
-        MainActivity.levels[level_Count].setUnlocked(true);
+        if(level_Count<20){
+            MainActivity.levels[level_Count].setUnlocked(true);
+        }
+
         Point size = new Point();
         getWindowManager().getDefaultDisplay().getSize(size);
 

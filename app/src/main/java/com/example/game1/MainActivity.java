@@ -9,6 +9,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static LevelDbHandler levelDbHandler;
     public static Level[] levels = new Level[20];
+    private int level_count;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -17,12 +18,18 @@ public class MainActivity extends AppCompatActivity {
         for(int i=0;i<20;i++){
             levels[i] = new Level();
         }
+        level_count=levelDbHandler.getLevelsCount();
         //hello world
     }
 
     public void startGame(View v){
-        Intent intent = new Intent(this, GameActivity.class);
-        startActivity(intent);
+        if(level_count<20){
+            Intent intent = new Intent(this, GameActivity.class);
+            startActivity(intent);
+        }else{
+            Intent intent = new Intent(this, LevelsActivity.class);
+            startActivity(intent);
+        }
     }
 
     public void displayHighScores(View v){
