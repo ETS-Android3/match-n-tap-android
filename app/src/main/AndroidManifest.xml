@@ -11,6 +11,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -20,16 +21,26 @@
         </activity>
         <activity
             android:name=".GameActivity"
+            android:screenOrientation="portrait"
+            android:noHistory="true"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-            >
         </activity>
         <activity
             android:name=".HighScore"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-            >
         </activity>
-        <activity android:name=".LevelsActivity" />
-        <activity android:name=".LevelCompleteActivity"></activity>
+        <activity
+            android:name=".LevelsActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        </activity>
+        <activity
+            android:name=".LevelCompleteActivity"
+            android:screenOrientation="portrait"
+            android:noHistory="true"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        </activity>
     </application>
 
 </manifest>

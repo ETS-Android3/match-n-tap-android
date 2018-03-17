@@ -1,13 +1,11 @@
 package com.example.game1;
 
 import android.graphics.Point;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.widget.Button;
 import android.widget.GridView;
-import android.widget.RelativeLayout;
+
+import static com.example.game1.MainActivity.soundManager;
 
 public class LevelsActivity extends AppCompatActivity {
 
@@ -30,5 +28,11 @@ public class LevelsActivity extends AppCompatActivity {
 
         LevelAdapter levelsAdapter = new LevelAdapter(this, MainActivity.levels, size.x, size.y);
         gridView.setAdapter(levelsAdapter);
+    }
+
+    @Override
+    public void onBackPressed() {
+        soundManager.playButtonClick();
+        finish();
     }
 }

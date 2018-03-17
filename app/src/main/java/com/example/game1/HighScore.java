@@ -6,6 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
 
+import static com.example.game1.MainActivity.soundManager;
+
 public class HighScore extends AppCompatActivity {
 
     TextView textView,textView2,textView3,textView4;
@@ -31,5 +33,11 @@ public class HighScore extends AppCompatActivity {
         textView3.setText("3."+sharedPreferences.getInt("score3",0));
         textView4.setText("4."+sharedPreferences.getInt("score4",0));
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        soundManager.playButtonClick();
+        finish();
     }
 }
