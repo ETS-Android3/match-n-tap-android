@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.util.Log;
@@ -13,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -80,22 +83,20 @@ public class LevelAdapter extends BaseAdapter {
         int colWidth = ((GridView) parent).getColumnWidth();
         final int level_number = position + 1;
 
-        TableLayout theLayout = (TableLayout) convertView.findViewById(R.id.table_layout);
+        RelativeLayout theLayout = (RelativeLayout) convertView.findViewById(R.id.rel_layout);
 
         if (level.getIsUnlocked() == false) {
             //TableRow tableRow = new TableRow(mContext);
             ImageView image = new ImageView(mContext);
-            ViewGroup.LayoutParams vp = new ViewGroup.LayoutParams
-                    (colWidth/2, colWidth/2);
+            RelativeLayout.LayoutParams vp = new RelativeLayout.LayoutParams(colWidth/2, colWidth/2);
+            vp.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
             image.setLayoutParams(vp);
             image.setImageBitmap(lockDrawable);
-
-            //image.setPadding(40,40,40,40);
             image.setAlpha(0.5f);
-            //tableRow.addView(image);
             theLayout.addView(image);
         } else {
             int num_stars = level.getNumStars();
+            TableLayout tableLayout = new TableLayout(mContext);
 
             TableRow tableRow1 = new TableRow(mContext);
             TableRow tableRow2 = new TableRow(mContext);
@@ -130,18 +131,22 @@ public class LevelAdapter extends BaseAdapter {
 
             TextView text = new TextView(mContext);
             text.setText(String.valueOf(position + 1));
-            text.setTextSize(mContext.getResources().getDimensionPixelSize(R.dimen.text_size_small));
+            //text.setTextSize(mContext.getResources().getDimensionPixelSize(R.dimen.text_size_tiny));
+            text.setTextColor(Color.BLACK);
             text.setWidth(colWidth / 2);
             text.setHeight(colWidth / 2);
+            text.setTypeface(Typeface.create(Typeface.MONOSPACE, Typeface.BOLD));
             text.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
 
             tableRow1.addView(star1);
             tableRow1.addView(star2);
-            theLayout.addView(tableRow1);
+            tableLayout.addView(tableRow1);
 
-            tableRow2.addView(star3);
             tableRow2.addView(text);
-            theLayout.addView(tableRow2);
+            tableRow2.addView(star3);
+            tableLayout.addView(tableRow2);
+
+            theLayout.addView(tableLayout);
 
             theLayout.setOnClickListener(new View.OnClickListener() {
                 @Override

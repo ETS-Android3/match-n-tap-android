@@ -17,7 +17,7 @@ public class LevelsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_levels);
-        GridView gridView = (GridView)findViewById(R.id.gridView);
+        AutoGridView gridView = (AutoGridView) findViewById(R.id.gridView);
         level_Count = MainActivity.levelDbHandler.getLevelsCount();
         for(int i=0;i<level_Count;i++){
             MainActivity.levels[i] = MainActivity.levelDbHandler.getLevel(i+1);

@@ -7,7 +7,7 @@
     android:background="@drawable/background"
     tools:context="com.example.game1.LevelsActivity">
 
-    <GridView
+    <com.example.game1.AutoGridView
         android:id="@+id/gridView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -17,6 +17,6 @@
         android:layout_marginTop="10dp"
         android:horizontalSpacing="20dp"
         android:verticalSpacing="20dp"
-        android:numColumns="4"
+        android:numColumns="@integer/grid_columns"
         android:stretchMode="columnWidth" />
 </FrameLayout>
