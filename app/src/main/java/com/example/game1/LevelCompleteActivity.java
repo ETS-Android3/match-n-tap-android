@@ -35,7 +35,7 @@ public class LevelCompleteActivity extends AppCompatActivity {
 
         ImageButton nextButton = (ImageButton) findViewById(R.id.nextButton);
         ImageButton replayButton = (ImageButton) findViewById(R.id.replayButton);
-        if (MainActivity.levels[levelNum].getIsUnlocked() == true) {
+        if (numStars>=1) {
             nextButton.setEnabled(true);
             soundManager.playLevelPass();
             levelMsg.setText("Level passed");
@@ -65,8 +65,8 @@ public class LevelCompleteActivity extends AppCompatActivity {
         }
         else if(numStars==3){
             star1.setImageResource(R.drawable.star);
-            star2.setImageResource(R.drawable.empty_star);
-            star3.setImageResource(R.drawable.empty_star);
+            star2.setImageResource(R.drawable.star);
+            star3.setImageResource(R.drawable.star);
         }
     }
 

@@ -28,10 +28,10 @@ public class HighScore extends AppCompatActivity {
         sharedPreferences  = getSharedPreferences("SHAR_PREF_NAME", Context.MODE_PRIVATE);
 
         //setting the values to the textViews
-        textView.setText("1."+sharedPreferences.getInt("userScore1",0));
-        textView2.setText("2."+sharedPreferences.getInt("userScore2",0));
-        textView3.setText("3."+sharedPreferences.getInt("userScore3",0));
-        textView4.setText("4."+sharedPreferences.getInt("userScore4",0));
+        textView.setText(""+sharedPreferences.getInt("score1",0));
+        textView2.setText(""+sharedPreferences.getInt("score2",0));
+        textView3.setText(""+sharedPreferences.getInt("score3",0));
+        textView4.setText(""+sharedPreferences.getInt("score4",0));
 
     }
 
