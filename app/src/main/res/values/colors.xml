@@ -3,20 +3,19 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+
     <color name="timebarBorder">#BBB</color>
-    <color name="timebarFill">#00BB00</color>
-    <color name="boxBorder">#000000</color>
-    <color name="scoreColor">#F00</color>
+    <color name="timebarFill">#4CAF50</color>
+
+    <color name="black">#000000</color>
+    <color name="white">#FFF</color>
+
+    <color name="darkRed">#B71C1C</color>
+    <color name="lightRed">#F44336</color>
+
     <color name="box1">#FFBB00</color>
-    <color name="yellow">#FFFF00</color>
     <color name="box2">#375E97</color>
     <color name="box3">#FB6542</color>
     <color name="box4">#3F681C</color>
-    <color name="levelScreenBg">#000</color>
-    <color name="levelCellBg">#FFF</color>
-    <color name="levelColor">#FFF</color>
-    <color name="levelBgColor">#808080</color>
-    <color name="popupBg">#000000</color>
-    <color name="white">#FFF</color>
 
 </resources>

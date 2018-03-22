@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="text_size">30sp</dimen>
+    <dimen name="text_size_small">18sp</dimen>
+    <dimen name="text_size_tiny">14sp</dimen>
+    <integer name="grid_columns">4</integer>
+</resources>

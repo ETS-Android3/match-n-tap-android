@@ -8,20 +8,11 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Rect;
 import android.graphics.Typeface;
-import android.media.AudioManager;
-import android.media.SoundPool;
-import android.os.Handler;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.PopupWindow;
 
 /**
  * Created by jyothsna on 7/2/18.
@@ -59,7 +50,6 @@ public class GameView extends SurfaceView implements Runnable{
     SharedPreferences sharedPreferences,currentLevelSP;
 
     private Grid grid;
-    private static SoundManager soundManager;
     private Timebar timebar;
 
     private SurfaceHolder surfaceHolder = getHolder();
@@ -104,8 +94,7 @@ public class GameView extends SurfaceView implements Runnable{
         }
         grid = new Grid(context, screenX, screenY, 1000*(15-((level_to_display-1)/4)*3),
                 (5- (level_to_display-1)/4)*1000,range);
-        soundManager = new SoundManager(context);
-        timebar = new Timebar(context, grid.getSpace(), 1000*10, screenX);
+        timebar = new Timebar(context, grid.getSpace(), 1000*60, screenX);
 
         wrongSymbol = BitmapFactory.decodeResource(context.getResources(), R.drawable.wrong);
         wrongSymbol = Bitmap.createScaledBitmap(wrongSymbol,grid.getWidth(),grid.getHeight(),false);
@@ -113,9 +102,9 @@ public class GameView extends SurfaceView implements Runnable{
         correctSymbol = BitmapFactory.decodeResource(context.getResources(), R.drawable.tick1);
         correctSymbol = Bitmap.createScaledBitmap(correctSymbol,grid.getWidth(),grid.getHeight(),false);
 
-        score1 = 100;//1000;
-        score2 = 200;//1400;
-        score3 = 400;//1800;
+        score1 = 1000;
+        score2 = 1400;
+        score3 = 1800;
 
         sharedPreferences = context.getSharedPreferences("SHAR_PREF_NAME",Context.MODE_PRIVATE);
 
@@ -128,7 +117,7 @@ public class GameView extends SurfaceView implements Runnable{
         userScore = grid.getScore();
 
         num_stars = 0;
-        soundManager.playBackground();
+        MainActivity.soundManager.playBackground();
 
 //        LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 //        View customView = layoutInflater.inflate(R.layout.level_complete,null);
@@ -143,15 +132,6 @@ public class GameView extends SurfaceView implements Runnable{
             draw();
             control();
         }
-//        final View parent = this;
-//        this.post(new Runnable() {
-//            @Override
-//            public void run() {
-//                //display the popup window
-//                popupWindow.showAtLocation(parent, Gravity.CENTER, 0, 0);
-//                Log.d(TAG, "popup");
-//            }
-//        });
     }
 
     private void update() {
@@ -170,11 +150,11 @@ public class GameView extends SurfaceView implements Runnable{
                     SharedPreferences.Editor editor = currentLevelSP.edit();
                     editor.putInt("curr_level", current_level + 1);
                     editor.apply();
+                    editor.commit();
+
                     Level level = new Level(current_level, num_stars,true,new int[4]);
                     MainActivity.levelDbHandler.addLevel(level);
-                    if(current_level<20){
-                        MainActivity.levels[current_level].setUnlocked(true);
-                    }
+                    MainActivity.levels[current_level].setUnlocked(true);
                 }else{
                     if(MainActivity.levelDbHandler.getLevel(level_num).getNumStars()<num_stars) {
                         Level level = new Level(level_num, num_stars,true,new int[4]);
@@ -183,16 +163,16 @@ public class GameView extends SurfaceView implements Runnable{
                 }
             }
             updateHighScoresinSharedPref(userScore);
-        }
 
-      /*  if(isPlaying==false) {
-            soundManager.stopBackground();
+            MainActivity.soundManager.stopBackground();
 
             // go to level complete activity
             Intent intent = new Intent(context, LevelCompleteActivity.class);
             intent.putExtra("LevelNum", level_to_display);
+            intent.putExtra("Score", userScore);
+            intent.putExtra("NumStars", num_stars);
             context.startActivity(intent);
-        }*/
+        }
     }
 
 
@@ -209,34 +189,6 @@ public class GameView extends SurfaceView implements Runnable{
                 timebar.draw(canvas, paint);
                 drawScore(canvas, paint);
             }
-            else {
-                soundManager.stopBackground();
-
-                // go to level complete activity
-                Intent intent = new Intent(context, LevelCompleteActivity.class);
-                intent.putExtra("LevelNum", level_to_display);
-                intent.putExtra("Score",userScore);
-                intent.putExtra("NumStars",num_stars);
-                context.startActivity(intent);
-            }
-                // temp code: need to display in other screen
-
-                /*paint.setColor(Color.BLACK);
-                paint.setTextSize(100);
-                paint.setTextAlign(Paint.Align.CENTER);
-                canvas.drawText("Score" + userScore, screenX/2, 150, paint);
-
-                paint.setColor(Color.BLACK);
-                paint.setTextSize(100);
-                paint.setTextAlign(Paint.Align.CENTER);
-                canvas.drawText("Stars" + num_stars, screenX/2, 300, paint);
-
-                paint.setColor(Color.BLACK);
-                paint.setTextSize(200);
-                paint.setTextAlign(Paint.Align.CENTER);
-                canvas.drawText("Gameover",canvas.getWidth()/2, canvas.getHeight()/2, paint);
-            }*/
-
             surfaceHolder.unlockCanvasAndPost(canvas);
         }
     }
@@ -257,6 +209,7 @@ public class GameView extends SurfaceView implements Runnable{
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        MainActivity.soundManager.pauseBackground();
     }
 
     public void resume() {
@@ -270,16 +223,16 @@ public class GameView extends SurfaceView implements Runnable{
         if(event.getActionMasked()==MotionEvent.ACTION_DOWN){
             int clicked = grid.checkColor(event.getX(), event.getY());
             if(clicked==Box.num_colors)
-                soundManager.playError();
+                MainActivity.soundManager.playError();
             else if(clicked>=0)
-                soundManager.playCorrect();
+                MainActivity.soundManager.playCorrect();
         }
         return super.onTouchEvent(event);
     }
 
 
     public static void stopMusic(){
-        soundManager.stopBackground();
+        MainActivity.soundManager.stopBackground();
     }
 
     private int getNumStars(int userScore) {
@@ -312,13 +265,15 @@ public class GameView extends SurfaceView implements Runnable{
                 e.putInt("userScore" + j, highScore[i - 1]);
             }
             e.apply();
+            e.commit();
         }
     }
 
     private void drawScore(Canvas canvas, Paint paint) {
         //adding userScore to the screen
-        paint.setColor(getResources().getColor(R.color.scoreColor));
-        paint.setTextSize(150);
+        paint.setColor(getResources().getColor(R.color.darkRed));
+        float scaledSizeInPixels = getResources().getDimensionPixelSize(R.dimen.text_size);
+        paint.setTextSize(scaledSizeInPixels);
         paint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
         paint.setTextAlign(Paint.Align.CENTER);
         canvas.drawText(String.valueOf(userScore),
@@ -330,16 +285,17 @@ public class GameView extends SurfaceView implements Runnable{
 
     private void drawLevelNum(Canvas canvas, Paint paint) {
         // draw circle to display level number in the circle
-        float radius = 50+grid.getSpace()/2;
-        paint.setColor(getResources().getColor(R.color.timebarFill));
-        canvas.drawCircle(radius, radius, radius, paint);
+        //float radius = 50+grid.getSpace()/2;
+        //paint.setColor(getResources().getColor(R.color.timebarFill));
+        //canvas.drawCircle(radius, radius, radius, paint);
 
         // draw text for level number
         paint.setColor(getResources().getColor(R.color.colorPrimaryDark));
-        paint.setTextSize(100);
-        paint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.NORMAL));
+        float scaledSizeInPixels = getResources().getDimensionPixelSize(R.dimen.text_size_small);
+        paint.setTextSize(scaledSizeInPixels);
+        paint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
         paint.setTextAlign(Paint.Align.CENTER);
         canvas.drawText(String.valueOf(level_to_display),
-                radius, grid.getSpace() - (paint.ascent()+paint.descent()), paint);
+                grid.getSpace(), grid.getSpace() - (paint.ascent()+paint.descent()), paint);
     }
 }

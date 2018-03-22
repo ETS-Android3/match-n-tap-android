@@ -3,7 +3,6 @@ package com.example.game1;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.util.Log;
 
 import java.util.Random;
 
@@ -47,7 +46,7 @@ public class Box {
         possibleColors[2] = context.getResources().getColor(R.color.box3);
         possibleColors[3] = context.getResources().getColor(R.color.box4);
 
-        borderColor = context.getResources().getColor(R.color.boxBorder);
+        borderColor = context.getResources().getColor(R.color.black);
 
         startTime = System.currentTimeMillis() - timeInterval;
     }
