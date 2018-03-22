@@ -65,8 +65,8 @@ public class LevelCompleteActivity extends AppCompatActivity {
         }
         else if(numStars==3){
             star1.setImageResource(R.drawable.star);
-            star2.setImageResource(R.drawable.empty_star);
-            star3.setImageResource(R.drawable.empty_star);
+            star2.setImageResource(R.drawable.star);
+            star3.setImageResource(R.drawable.star);
         }
     }
 

@@ -94,7 +94,7 @@ public class GameView extends SurfaceView implements Runnable{
         }
         grid = new Grid(context, screenX, screenY, 1000*(15-((level_to_display-1)/4)*3),
                 (5- (level_to_display-1)/4)*1000,range);
-        timebar = new Timebar(context, grid.getSpace(), 1000*60, screenX);
+        timebar = new Timebar(context, grid.getSpace(), 1000*5, screenX);
 
         wrongSymbol = BitmapFactory.decodeResource(context.getResources(), R.drawable.wrong);
         wrongSymbol = Bitmap.createScaledBitmap(wrongSymbol,grid.getWidth(),grid.getHeight(),false);
@@ -102,9 +102,9 @@ public class GameView extends SurfaceView implements Runnable{
         correctSymbol = BitmapFactory.decodeResource(context.getResources(), R.drawable.tick1);
         correctSymbol = Bitmap.createScaledBitmap(correctSymbol,grid.getWidth(),grid.getHeight(),false);
 
-        score1 = 1000;
-        score2 = 1400;
-        score3 = 1800;
+        score1 = 100;
+        score2 = 140;
+        score3 = 180;
 
         sharedPreferences = context.getSharedPreferences("SHAR_PREF_NAME",Context.MODE_PRIVATE);
 
