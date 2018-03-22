@@ -259,10 +259,10 @@ public class GameView extends SurfaceView implements Runnable{
         if(finalI!=4) {
             //storing the scores through shared Preferences
             SharedPreferences.Editor e = sharedPreferences.edit();
-            e.putInt("userScore" + (finalI + 1), userScore);
+            e.putInt("score" + (finalI + 1), userScore);
             for (int i = finalI + 1; i < 4; i++) {
                 int j = i + 1;
-                e.putInt("userScore" + j, highScore[i - 1]);
+                e.putInt("score" + j, highScore[i - 1]);
             }
             e.apply();
             e.commit();
