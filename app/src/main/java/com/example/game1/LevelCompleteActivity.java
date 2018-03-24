@@ -35,7 +35,7 @@ public class LevelCompleteActivity extends AppCompatActivity {
 
         ImageButton nextButton = (ImageButton) findViewById(R.id.nextButton);
         ImageButton replayButton = (ImageButton) findViewById(R.id.replayButton);
-        if (numStars>=1) {
+        if (numStars>=1 && levelNum<20) {
             nextButton.setEnabled(true);
             soundManager.playLevelPass();
             levelMsg.setText("Level passed");
