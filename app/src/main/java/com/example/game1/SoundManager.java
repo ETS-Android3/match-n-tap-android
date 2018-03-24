@@ -30,6 +30,7 @@ public class SoundManager {
 
         bgSound = MediaPlayer.create(context, R.raw.bg_music);
         bgSound.setLooping(true);
+        bgSound.setVolume(0.2f,0.2f);
 
         levelPass = soundPool.load(context, R.raw.level_pass, 1);
         levelFail = soundPool.load(context, R.raw.level_fail, 1);
