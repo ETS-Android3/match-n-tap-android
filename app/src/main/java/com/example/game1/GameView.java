@@ -76,6 +76,7 @@ public class GameView extends SurfaceView implements Runnable{
         level_num = level_number;
         currentLevelSP = context.getSharedPreferences("CURR_LEVEL",Context.MODE_PRIVATE);
         current_level = currentLevelSP.getInt("curr_level",1);
+        if(current_level>20) current_level=20;
         Log.d(TAG,"level_num="+level_number);
         Log.d(TAG,"current level"+current_level);
 
@@ -94,7 +95,7 @@ public class GameView extends SurfaceView implements Runnable{
         }
         grid = new Grid(context, screenX, screenY, 1000*(15-((level_to_display-1)/4)*3),
                 (5- (level_to_display-1)/4)*1000,range);
-        timebar = new Timebar(context, grid.getSpace(), 1000*5, screenX);
+        timebar = new Timebar(context, grid.getSpace(), 1000*2, screenX);
 
         wrongSymbol = BitmapFactory.decodeResource(context.getResources(), R.drawable.wrong);
         wrongSymbol = Bitmap.createScaledBitmap(wrongSymbol,grid.getWidth(),grid.getHeight(),false);
@@ -102,9 +103,9 @@ public class GameView extends SurfaceView implements Runnable{
         correctSymbol = BitmapFactory.decodeResource(context.getResources(), R.drawable.tick1);
         correctSymbol = Bitmap.createScaledBitmap(correctSymbol,grid.getWidth(),grid.getHeight(),false);
 
-        score1 = 100;
-        score2 = 140;
-        score3 = 180;
+        score1 = 10;
+        score2 = 20;
+        score3 = 1800;
 
         sharedPreferences = context.getSharedPreferences("SHAR_PREF_NAME",Context.MODE_PRIVATE);
 
@@ -147,14 +148,18 @@ public class GameView extends SurfaceView implements Runnable{
             if(num_stars>0) {
                 //level_no = 0 means current level opened through play now option
                 if(level_num == 0 || level_num==current_level){
+
                     SharedPreferences.Editor editor = currentLevelSP.edit();
                     editor.putInt("curr_level", current_level + 1);
                     editor.apply();
                     editor.commit();
+                    if(current_level<20) {
+                        MainActivity.levels[current_level].setUnlocked(true);
+                    }
 
                     Level level = new Level(current_level, num_stars,true,new int[4]);
                     MainActivity.levelDbHandler.addLevel(level);
-                    MainActivity.levels[current_level].setUnlocked(true);
+
                 }else{
                     if(MainActivity.levelDbHandler.getLevel(level_num).getNumStars()<num_stars) {
                         Level level = new Level(level_num, num_stars,true,new int[4]);
@@ -189,7 +194,8 @@ public class GameView extends SurfaceView implements Runnable{
                 timebar.draw(canvas, paint);
                 drawScore(canvas, paint);
             }
-            surfaceHolder.unlockCanvasAndPost(canvas);
+            if(canvas!=null && surfaceHolder!=null)
+                surfaceHolder.unlockCanvasAndPost(canvas);
         }
     }
 
