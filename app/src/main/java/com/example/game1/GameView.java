@@ -103,10 +103,13 @@ public class GameView extends SurfaceView implements Runnable{
         correctSymbol = BitmapFactory.decodeResource(context.getResources(), R.drawable.tick1);
         correctSymbol = Bitmap.createScaledBitmap(correctSymbol,grid.getWidth(),grid.getHeight(),false);
 
-        int start = 1+5*((level_to_display-1)/5);
-        score1 = 1000 + start*100;
-        score2 = score1 + start*100;
-        score3 = score2 + start*100;
+        if(level_to_display<=10){
+            score1 = 1000 + level_to_display*100;
+        }else {
+            score1 = 600 + level_to_display * 100;
+        }
+        score2 = score1 + 500;
+        score3 = score2 + 500;
 
         sharedPreferences = context.getSharedPreferences("SHAR_PREF_NAME",Context.MODE_PRIVATE);
 
