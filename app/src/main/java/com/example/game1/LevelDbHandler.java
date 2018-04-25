@@ -3,6 +3,7 @@ package com.example.game1;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -70,7 +71,11 @@ public class LevelDbHandler extends SQLiteOpenHelper{
         values.put(COLOR_3,level.getColorCollected()[2]);
         values.put(COLOR_4,level.getColorCollected()[3]);
 
-        db.insert(TABLE_NAME,null,values);
+        try {
+            db.insert(TABLE_NAME, null, values);
+        }catch(SQLiteConstraintException e){
+            //cannot insert duplicates
+        }
         db.close();
     }
 

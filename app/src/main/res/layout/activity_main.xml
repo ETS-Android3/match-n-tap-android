@@ -10,6 +10,18 @@
     android:padding="40dp"
     tools:context="com.example.game1.MainActivity">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/app_name"
+        android:fontFamily="sans-serif-smallcaps"
+        android:textStyle="bold"
+        android:textSize="@dimen/text_size"
+        android:textAlignment="center"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="20sp"
+        android:textColor="@color/white"/>
+
     <RelativeLayout
         android:id="@+id/relativeLayout"
         android:layout_width="match_parent"
